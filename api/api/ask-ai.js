@@ -5,7 +5,7 @@ export default async function handler(req, res) {
 
   try {
     const { message, prompt, query } = req.body || {};
-    const userMessage = message || prompt || query;
+    const userMessage = message || prompt || query || question;
 
     if (!userMessage) {
       return res.status(400).json({ error: "Message is required" });
