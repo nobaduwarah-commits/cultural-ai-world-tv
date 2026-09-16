@@ -4,7 +4,7 @@ export default async function handler(req, res) {
   }
 
   try {
-    const { message, prompt, query } = req.body || {};
+    const { message, prompt, question } = req.body || {};
     const userMessage = message || prompt || query || question;
 
     if (!userMessage) {
