@@ -1,0 +1,1450 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<title>Cultural AI World TV — FINAL WINNER BUILD</title>
+<style>
+:root{--bg:#06101b;--panel:#0d2235;--panel2:#12334c;--line:#2c5873;--text:#f7fbff;--muted:#a9bfd0;--cyan:#55e5ff}
+*{box-sizing:border-box}html,body{margin:0;background:var(--bg);color:var(--text);font-family:Arial,sans-serif}
+body{overflow-x:hidden}.app{min-height:100vh;background:radial-gradient(circle at 80% 0,#164a68 0,#081827 38%,#040a10 82%)}
+header{height:78px;display:flex;align-items:center;gap:18px;padding:0 4%;border-bottom:1px solid #25475e;background:#06111df2;position:sticky;top:0;z-index:20}
+.brand{font-size:23px;font-weight:900;white-space:nowrap}.brand span{color:var(--cyan)}
+nav{display:flex;gap:5px;flex:1}button{font:inherit;cursor:pointer;color:inherit}
+nav button,.topbtn,.secondary,.topic{background:#102b42;border:1px solid #31566e;border-radius:11px;padding:12px 16px;font-weight:800}
+nav button{background:transparent;border-color:transparent;color:#bcd0df}nav button.active{background:#163c58;color:#fff;outline:3px solid var(--cyan)}
+button:hover,button:focus{outline:3px solid var(--cyan);outline-offset:2px}
+main{max-width:1550px;margin:auto;padding:28px 5% 80px}.view{display:none}.view.active{display:block}
+.hero{min-height:390px;display:grid;grid-template-columns:1.15fr .85fr;gap:35px;align-items:center}
+.kicker{color:var(--cyan);font-size:13px;font-weight:900;letter-spacing:2px}
+h1{font-size:58px;line-height:1.03;margin:10px 0 16px}.hero p{font-size:19px;line-height:1.5;color:var(--muted)}
+.buttons{display:flex;gap:12px;flex-wrap:wrap;margin-top:22px}.primary{background:var(--cyan);color:#03131c;border:1px solid var(--cyan);border-radius:12px;padding:14px 20px;font-weight:900}
+.heroVisual{height:310px;border:1px solid #34627e;border-radius:25px;background:linear-gradient(145deg,#164663,#091824);display:flex;align-items:center;justify-content:center;box-shadow:0 20px 60px #0006}
+.globe{font-size:140px}.sectionTitle{margin:25px 0 14px}.sectionTitle h2{margin:0;font-size:30px}.sectionTitle p{color:var(--muted)}
+.searchbar{display:flex;gap:12px;margin:18px 0}.searchbar input{flex:1;background:#0b1d2d;color:#fff;border:1px solid #31546c;border-radius:12px;padding:16px;font-size:18px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:15px}.homeCountries .card{}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:16px;overflow:hidden}.card button{width:100%;min-height:165px;text-align:left;padding:18px;background:transparent;border:0}
+/* ===== CONSISTENT TV/MOUSE FOCUS FOR ALL COUNTRY & STATE CARDS =====
+   State cards and country cards must show the same visible focus/hover ring.
+   This makes the active item obvious with both mouse and D-pad. */
+.card:hover,
+.card:has(> button:hover),
+.card:has(> button:focus),
+.card:has(> button.tv-focus) {
+  border-color: var(--cyan) !important;
+  box-shadow: 0 0 0 4px rgba(57,245,255,.18), 0 0 22px rgba(57,245,255,.35) !important;
+}
+.card > button:hover,
+.card > button:focus,
+.card > button.tv-focus {
+  outline: 3px solid var(--cyan) !important;
+  outline-offset: 4px !important;
+}
+
+.flag{font-size:36px}.card h3{margin:7px 0;font-size:20px}.muted{color:var(--muted);font-size:14px;line-height:1.45}
+.countryHead{display:flex;justify-content:space-between;align-items:flex-start;gap:20px}.countryHead h1{font-size:46px;margin:4px 0}
+.facts{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin:22px 0}.fact{background:var(--panel);border:1px solid var(--line);border-radius:15px}
+.fact button{width:100%;min-height:140px;text-align:left;padding:18px;background:transparent;border:0}.fact b{display:block;color:var(--cyan);margin-bottom:9px}
+.detail{padding:20px;background:#0d2639;border:1px solid #35627c;border-radius:16px;margin:16px 0}.detail h3{color:var(--cyan);margin-top:0}
+.videoBox{background:#02080d;border:1px solid #2b4e66;border-radius:16px;padding:16px;margin-top:18px}.videoBox video{width:100%;max-height:540px;border-radius:10px;background:#000}
+.videoGrid{display:grid;grid-template-columns:1.5fr .5fr;gap:18px}.side{background:#0d2235;border:1px solid var(--line);border-radius:16px;padding:18px}
+.aiBox{display:grid;grid-template-columns:1fr auto;gap:10px}.aiBox input{background:#081725;color:white;border:1px solid #31566e;border-radius:12px;padding:15px;font-size:17px}
+.badge{display:inline-block;border:1px solid #3d718d;border-radius:999px;padding:7px 10px;margin:4px;color:#d8f8ff}
+.searchModal{position:fixed;inset:0;background:#040b13f7;z-index:50;padding:90px 7% 40px;display:none;overflow:auto}.searchModal.open{display:block}
+.results{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:14px}.result{background:#102a40;border:1px solid #31566e;color:#fff;border-radius:14px;padding:17px;text-align:left}
+.toast{position:fixed;right:22px;bottom:22px;z-index:100;background:#143b54;border:1px solid var(--cyan);padding:14px 18px;border-radius:12px;display:none}
+@media(max-width:950px){main .detail[style]{grid-template-columns:repeat(2,1fr)!important}header{height:auto;min-height:64px;flex-wrap:wrap;padding:10px 3%;gap:10px}.brand{font-size:18px}.hero{grid-template-columns:1fr;min-height:0}.hero h1,h1{font-size:40px}.facts{grid-template-columns:repeat(2,1fr)}.videoGrid{grid-template-columns:1fr}nav{order:3;overflow-x:auto;width:100%;flex:0 0 100%;padding-bottom:2px}.topbtn{display:none}.grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.card button{min-height:130px;padding:13px}.card h3{font-size:17px}.flag{font-size:30px}.detail{padding:15px}.stateGrid{grid-template-columns:repeat(2,minmax(0,1fr))}.videoBox{padding:12px}.videoBox video{width:100%;height:auto;max-height:none;aspect-ratio:16/9}.videoTitle h2{font-size:20px}.videoMeta{flex-direction:column;align-items:flex-start}.searchModal{padding:70px 4% 25px}.aiBox{grid-template-columns:1fr}.searchbar{flex-wrap:wrap}.searchbar input{min-width:0}.countryHead{flex-direction:column}.countryHead h1{font-size:36px}}
+@media(max-width:560px){main{padding:16px 4% 50px}.grid,.facts,.stateGrid,main .detail[style]{grid-template-columns:1fr!important}.hero h1,h1{font-size:32px}.hero p{font-size:16px}.sectionTitle h2{font-size:24px}.primary,.secondary,.topic{padding:12px 14px;font-size:14px}.card button{min-height:112px}.stateCard{min-height:78px}.videoBox{margin-top:12px}.videoPlaceholder{min-height:210px}.videoPlaceholder div{font-size:60px}.videoPlaceholder b{font-size:18px}.videoTitle{align-items:flex-start}.videoTitle .secondary{white-space:nowrap}}
+@media(min-width:951px){.videoBox video{aspect-ratio:16/9;object-fit:contain}.heroVisual{min-height:310px}}
+
+.videoTitle{display:flex;align-items:center;justify-content:space-between;gap:15px}.videoTitle h2{margin:5px 0 0}.videoMeta{display:flex;justify-content:space-between;gap:10px;padding:10px 4px;color:#8fb3c7;font-size:12px;text-transform:uppercase;letter-spacing:.8px}.videoMeta span:first-child{color:#55e5ff;font-weight:900}.videoPlaceholder{min-height:280px;border:1px dashed #3b6b86;border-radius:12px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;background:radial-gradient(circle,#123e59,#050c13)}.videoPlaceholder div{font-size:80px}.videoPlaceholder b{font-size:22px;margin:8px}.badges{margin-top:10px}.badges .badge{margin-left:0}.fact button{transition:transform .12s,background .12s}.fact button:active{transform:scale(.98)}
+
+.stateExplorer{margin:24px 0;padding:20px;border:1px solid #2c5873;border-radius:20px;background:#0a1d2d}.stateExplorer h2{margin:0 0 6px}.stateExplorer p{color:var(--muted)}.stateGrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:10px;margin-top:15px}.stateCard{min-height:90px;text-align:left;padding:14px;border-radius:14px;border:1px solid #31566e;background:#102b42;color:#fff;display:flex;flex-direction:column;gap:5px}.stateCard span{font-size:22px}.stateCard small{color:var(--muted)}.stateCard:focus{outline:3px solid var(--cyan);transform:translateY(-2px)}.stateHero{display:flex;justify-content:space-between;align-items:center;gap:15px}.stateHero h2{font-size:34px;margin:8px 0}.stateFacts{margin-top:15px}
+.moreVideoList{display:grid;gap:10px;margin:14px 0}.moreVideo{display:flex!important;flex-direction:column;align-items:flex-start!important;text-align:left!important;width:100%}.moreVideo small{display:block;margin-top:5px;color:var(--muted);font-size:.72rem}.detail{max-width:760px}\n
+/* TV / keyboard remote navigation */
+/* Search results: clear TV focus targets */
+.aiInputWrap,.mainSearchWrap{position:relative;flex:1;min-width:0}
+.aiSuggestions,.searchSuggestions{position:absolute;left:0;right:0;top:calc(100% + 8px);z-index:120;display:none;background:#0b1d2c;border:1px solid #36dff7;border-radius:14px;padding:8px;box-shadow:0 16px 40px rgba(0,0,0,.35);max-height:330px;overflow:auto}
+.aiSuggestion,.searchSuggestion{display:block;width:100%;background:#102a40;border:1px solid #31566e;color:#fff;border-radius:10px;padding:12px 14px;margin:5px 0;text-align:left;font-size:15px;cursor:pointer}
+.aiSuggestion.tv-focus,.searchSuggestion.tv-focus{outline:3px solid #36dff7;outline-offset:1px}
+.searchResults .result {
+  cursor: pointer;
+}
+.searchResults .result.tv-focus {
+  transform: scale(1.015);
+}
+#searchModal .detail {
+  max-width: 1100px;
+}
+:focus-visible {
+  outline: 3px solid #39f5ff !important;
+  outline-offset: 4px !important;
+  box-shadow: 0 0 0 4px rgba(57,245,255,.18), 0 0 22px rgba(57,245,255,.35) !important;
+}
+.tv-focus {
+  outline: 3px solid #39f5ff !important;
+  outline-offset: 4px !important;
+  box-shadow: 0 0 0 4px rgba(57,245,255,.18), 0 0 22px rgba(57,245,255,.35) !important;
+}
+button, a, [role="button"], input, select, .card, .topic, .country, .state {
+  -webkit-tap-highlight-color: transparent;
+}
+
+
+/* ===== TV FULL-SCREEN MODE ===== */
+@media (min-width: 1000px) and (min-height: 500px){
+  html,body{
+    width:100%;
+    height:100%;
+    overflow:hidden !important;
+    scrollbar-width:none;
+  }
+  html::-webkit-scrollbar,body::-webkit-scrollbar{display:none;width:0;height:0}
+  .app{height:100vh;min-height:0;overflow:hidden}
+  header{position:relative;flex-shrink:0}
+  main{
+    height:calc(100vh - 78px);
+    max-height:calc(100vh - 78px);
+    overflow-y:auto;
+    overflow-x:hidden;
+    scrollbar-width:none;
+    padding-bottom:40px;
+    scroll-behavior:smooth;
+  }
+  main::-webkit-scrollbar{display:none;width:0;height:0}
+  .view.active{min-height:100%}
+}
+
+/* =========================================================
+   CULTURAL AI WORLD TV — FIRE TV NATIVE PRESENTATION
+   Large-screen / remote-first UI. Browser scrollbars hidden.
+   Mobile layout remains unchanged.
+   ========================================================= */
+@media (min-width:1000px) and (min-height:500px){
+  :root{
+    --tv-gutter:clamp(36px,4vw,78px);
+    --tv-gap:clamp(18px,1.8vw,34px);
+  }
+
+  html,body{
+    width:100%;
+    height:100%;
+    overflow:hidden !important;
+    overscroll-behavior:none;
+    scrollbar-width:none;
+  }
+  html::-webkit-scrollbar,body::-webkit-scrollbar{display:none}
+
+  .app{
+    width:100vw;
+    height:100vh;
+    min-height:100vh;
+    overflow:hidden;
+    background:
+      radial-gradient(circle at 82% 10%,#164d6c 0,#081827 34%,#040a10 78%);
+  }
+
+  header{
+    height:86px;
+    min-height:86px;
+    padding:0 var(--tv-gutter);
+    gap:28px;
+    position:relative !important;
+    border-bottom:1px solid #2a5068;
+    box-shadow:0 8px 28px #0005;
+  }
+  .brand{font-size:27px}
+  nav{gap:8px}
+  nav button,.topbtn,.secondary,.topic{
+    min-height:54px;
+    padding:13px 22px;
+    border-radius:14px;
+    font-size:17px;
+  }
+
+  main{
+    width:100%;
+    max-width:none;
+    height:calc(100vh - 86px);
+    max-height:calc(100vh - 86px);
+    margin:0;
+    padding:34px var(--tv-gutter) 56px;
+    overflow-y:auto !important;
+    overflow-x:hidden;
+    scrollbar-width:none;
+    scroll-snap-type:y proximity;
+    scroll-behavior:smooth;
+  }
+  main::-webkit-scrollbar{display:none}
+
+  .view.active{
+    min-height:calc(100vh - 130px);
+    scroll-snap-align:start;
+  }
+
+  /* Home = TV launch screen */
+  .hero{
+    min-height:calc(100vh - 160px);
+    grid-template-columns:1.2fr .8fr;
+    gap:clamp(35px,5vw,90px);
+    align-items:center;
+  }
+  h1{font-size:clamp(48px,5vw,76px)}
+  .hero p{font-size:22px;max-width:760px}
+  .kicker{font-size:15px}
+  .heroVisual{
+    height:min(46vh,430px);
+    border-radius:30px;
+  }
+  .globe{font-size:170px}
+
+  .sectionTitle h2{font-size:38px}
+  .sectionTitle p{font-size:18px}
+
+  /* TV card grid: fewer, larger targets */
+  .grid{
+    grid-template-columns:repeat(4,minmax(240px,1fr));
+    gap:var(--tv-gap);
+  }
+  .card{
+    border-radius:20px;
+    min-height:190px;
+    box-shadow:0 10px 30px #0003;
+  }
+  .card button{
+    min-height:190px;
+    padding:25px;
+  }
+  .card h3{font-size:24px}
+  .muted{font-size:16px}
+
+  .countryHead h1{font-size:58px}
+  .facts{gap:20px}
+  .facts>*{min-height:150px}
+
+  /* Remote focus is deliberately strong and TV-sized. */
+  button:focus,.card button:focus,input:focus,[tabindex]:focus{
+    outline:4px solid var(--cyan) !important;
+    outline-offset:4px;
+    box-shadow:0 0 0 7px #55e5ff33,0 12px 35px #0008;
+  }
+  .tv-focus{
+    outline:4px solid var(--cyan) !important;
+    outline-offset:4px;
+    box-shadow:0 0 0 7px #55e5ff33,0 12px 35px #0008 !important;
+  }
+
+  /* Search/AI controls are comfortable for a 10-foot UI. */
+  .searchbar{gap:16px}
+  .searchbar input{
+    min-height:64px;
+    font-size:23px;
+    padding:18px 22px;
+    border-radius:16px;
+  }
+  .primary,.buttons .secondary{
+    min-height:60px;
+    padding:16px 25px;
+    font-size:19px;
+    border-radius:15px;
+  }
+
+  /* Don't show browser-like scroll indicators. */
+  ::-webkit-scrollbar{width:0;height:0}
+}
+
+/* Real TV viewport can be 720p/1080p/4K. Keep it clean at all scales. */
+@media (min-width:1200px) and (min-height:650px){
+  .grid{grid-template-columns:repeat(4,minmax(250px,1fr))}
+}
+
+
+/* FINAL FIRE TV REMOTE UX */
+input:focus{caret-color:var(--cyan)}
+@media (min-width:1000px) and (min-height:500px){
+  main{overscroll-behavior:contain;scrollbar-width:none;}
+  main::-webkit-scrollbar{display:none;}
+  .view.active{scroll-margin-top:10px;}
+  .searchSuggestions,.aiSuggestions{max-height:420px;overflow-y:auto;scrollbar-width:none;}
+  .searchSuggestions::-webkit-scrollbar,.aiSuggestions::-webkit-scrollbar{display:none;}
+  input{user-select:text;}
+}
+
+.voiceSearchBtn{cursor:pointer;position:relative}
+.voiceSearchBtn.listening{
+  outline:4px solid #ff5b7d !important;
+  box-shadow:0 0 0 8px #ff5b7d33,0 12px 35px #0008 !important;
+  animation:voicePulse .75s ease-in-out infinite alternate;
+}
+.voiceSearchBtn.listening::after{
+  content:"";
+  position:absolute;inset:-9px;border:3px solid #ff5b7d;border-radius:inherit;
+  opacity:.9;pointer-events:none;animation:voiceRing .9s ease-out infinite;
+}
+@keyframes voicePulse{from{transform:scale(1)}to{transform:scale(1.035)}}
+@keyframes voiceRing{0%{transform:scale(.96);opacity:.95}100%{transform:scale(1.08);opacity:0}}
+.voiceListeningOverlay{
+  position:fixed;inset:0;background:rgba(2,12,28,.78);backdrop-filter:blur(4px);
+  z-index:9999;display:none;align-items:center;justify-content:center;
+}
+.voiceListeningOverlay.open{display:flex}
+.voiceListeningCard{
+  width:min(720px,82vw);padding:42px;border:3px solid #29d8ff;border-radius:28px;
+  background:linear-gradient(145deg,#062d52,#07182c);text-align:center;
+  box-shadow:0 25px 80px #000b;
+}
+.voiceMic{
+  font-size:72px;display:inline-flex;width:128px;height:128px;align-items:center;justify-content:center;
+  border-radius:50%;border:4px solid #ff5b7d;animation:voiceMicPulse .8s infinite alternate;
+}
+@keyframes voiceMicPulse{from{transform:scale(.92);box-shadow:0 0 0 0 #ff5b7d55}to{transform:scale(1.06);box-shadow:0 0 0 22px #ff5b7d00}}
+.voiceListeningText{font-size:28px;font-weight:800;margin-top:20px}
+.voiceListeningHint{font-size:17px;opacity:.8;margin-top:10px}
+.voiceStatus{
+  margin-top:10px;
+  font-size:16px;
+  opacity:.9;
+}
+
+</style>
+</head>
+<body>
+<div class="app">
+<header>
+<div class="brand">🌍 Cultural <span>AI</span> World TV</div>
+<nav id="nav">
+<button data-action="nav" data-page="home" class="active">Home</button>
+<button data-action="nav" data-page="explore">Explore</button>
+<button data-action="nav" data-page="journey">AI Journey</button>
+<button data-action="nav" data-page="favorites">Favorites</button>
+</nav>
+<button class="topbtn" data-action="open-search">🔎 Search</button>
+<button class="topbtn voiceSearchBtn" data-action="voice-search" title="Voice Search">🎙️ Voice Search</button>
+<button class="topbtn" data-action="nav" data-page="journey">✨ Ask AI</button>
+</header>
+
+<main>
+<section id="home" class="view active">
+<div class="hero">
+<div><div class="kicker">FIRE TV • CULTURE + AI + VIDEO</div>
+<h1>Discover the world, one culture at a time.</h1>
+<p>Explore festivals, food, languages and regional traditions — then ask Cultural AI to explain what you are watching and recommend your next cultural story.</p>
+<div class="buttons">
+<button class="primary" data-action="country" data-country="India">▶ Start with India</button>
+<button class="secondary" data-action="nav" data-page="explore">🌍 Explore Countries</button>
+</div></div>
+<div class="heroVisual"><div class="globe">🌍</div></div>
+</div>
+<div class="detail" style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:18px"><div><b>🌍 195 Countries</b><div class="muted">Search the world</div></div><div><b>🤖 Cultural AI</b><div class="muted">Ask & discover</div></div><div><b>🎬 Video Stories</b><div class="muted">Watch culture</div></div><div><b>⭐ Favorites</b><div class="muted">Save journeys</div></div></div>
+<div class="sectionTitle"><h2>Featured cultural stories</h2><p>Every card opens a complete culture → topic → video experience.</p></div>
+<div id="featured" class="grid"></div><div class="sectionTitle"><h2>🌍 All 195 Countries</h2><p>Every country is available — select any country to explore its culture.</p></div><div id="homeCountries" class="grid"></div><div class="sectionTitle"><h2>How it works</h2><p>One simple TV journey from curiosity to culture.</p></div><div class="detail"><div class="badges"><span class="badge">1. 🌍 Choose a country</span><span class="badge">2. 🎉 Pick a topic</span><span class="badge">3. 🤖 Ask Cultural AI</span><span class="badge">4. 🎬 Watch a story</span><span class="badge">5. ⭐ Save it</span></div></div>
+
+</section>
+
+<section id="explore" class="view">
+<div class="sectionTitle"><h2>🌍 Explore World Cultures</h2><p>Choose a country. Then select Food, Festivals, Language or Region.</p></div>
+<div class="searchbar"><input id="countryInput" placeholder="Search any country..." autocomplete="off"><button class="secondary" data-action="clear-explore">Clear</button></div>
+<div id="countries" class="grid"></div>
+</section>
+
+<section id="journey" class="view">
+<div class="sectionTitle"><h2>✨ Cultural AI Journey</h2><p>Ask a cultural question and get a guided next step. Use the Fire TV remote D-pad to navigate and OK to select.</p></div>
+<div class="detail">
+<h3>🤖 Cultural AI Concierge</h3>
+<div class="aiBox"><div class="aiInputWrap"><input id="aiInput" placeholder="Example: Why is Bihu important?" autocomplete="off"><div id="aiSuggestions" class="aiSuggestions"></div></div><button class="primary" data-action="run-ai">Ask AI</button></div>
+<div id="aiAnswer" style="margin-top:15px">Try asking about Bihu, Japanese festivals, Mexican food, Korean music, or any country.</div>
+</div>
+<h2>Suggested journeys</h2><div id="journeys" class="grid"></div>
+</section>
+
+<section id="favorites" class="view">
+<div class="sectionTitle"><h2>⭐ Favorites</h2><p>Your saved cultural destinations.</p></div>
+<div id="favoritesGrid" class="grid"></div>
+</section>
+
+<section id="country" class="view">
+<button class="secondary" data-action="nav" data-page="explore">← Back to Explore</button>
+<div id="countryContent"></div>
+</section>
+</main>
+</div>
+
+<div id="searchModal" class="searchModal">
+<div class="searchbar"><div class="mainSearchWrap"><input id="mainInput" placeholder="Search country, state, festival, food, language..." autocomplete="off">
+<button class="secondary voiceSearchBtn" data-action="voice-search" aria-label="Start voice search">🎙️ Speak</button><div id="searchSuggestions" class="searchSuggestions"></div></div><button class="secondary" data-action="close-search">Close</button></div>
+<div id="results" class="results"></div>
+</div>
+<div id="voiceListeningOverlay" class="voiceListeningOverlay" aria-hidden="true">
+  <div class="voiceListeningCard">
+    <div class="voiceMic">🎙️</div>
+    <div id="voiceListeningText" class="voiceListeningText">Listening…</div>
+    <div id="voiceListeningHint" class="voiceListeningHint">Speak a country, food, festival, language or cultural topic.</div>
+    <button class="secondary" data-action="voice-cancel" style="margin-top:22px">✕ Cancel</button>
+  </div>
+</div>
+<div id="toast" class="toast"></div>
+
+<script>
+const COUNTRIES = ["Afghanistan","Albania","Algeria","Andorra","Angola","Antigua and Barbuda","Argentina","Armenia","Australia","Austria","Azerbaijan","Bahamas","Bahrain","Bangladesh","Barbados","Belarus","Belgium","Belize","Benin","Bhutan","Bolivia","Bosnia and Herzegovina","Botswana","Brazil","Brunei","Bulgaria","Burkina Faso","Burundi","Cabo Verde","Cambodia","Cameroon","Canada","Central African Republic","Chad","Chile","China","Colombia","Comoros","Congo","Côte d'Ivoire","Costa Rica","Democratic Republic of the Congo","Croatia","Cuba","Cyprus","Czechia","Denmark","Djibouti","Dominica","Dominican Republic","Ecuador","Egypt","El Salvador","Equatorial Guinea","Eritrea","Estonia","Eswatini","Ethiopia","Fiji","Finland","France","Gabon","Gambia","Georgia","Germany","Ghana","Greece","Grenada","Guatemala","Guinea","Guinea-Bissau","Guyana","Haiti","Honduras","Hungary","Iceland","India","Indonesia","Iran","Iraq","Ireland","Israel","Italy","Jamaica","Japan","Jordan","Kazakhstan","Kenya","Kiribati","Kuwait","Kyrgyzstan","Laos","Latvia","Lebanon","Lesotho","Liberia","Libya","Liechtenstein","Lithuania","Luxembourg","Madagascar","Malawi","Malaysia","Maldives","Mali","Malta","Marshall Islands","Mauritania","Mauritius","Mexico","Micronesia","Moldova","Monaco","Mongolia","Montenegro","Morocco","Mozambique","Myanmar","Namibia","Nauru","Nepal","Netherlands","New Zealand","Nicaragua","Niger","Nigeria","North Korea","North Macedonia","Norway","Oman","Pakistan","Palau","Palestine","Panama","Papua New Guinea","Paraguay","Peru","Philippines","Poland","Portugal","Qatar","Romania","Russia","Rwanda","Saint Kitts and Nevis","Saint Lucia","Saint Vincent and the Grenadines","Samoa","San Marino","Sao Tome and Principe","Saudi Arabia","Senegal","Serbia","Seychelles","Sierra Leone","Singapore","Slovakia","Slovenia","Solomon Islands","Somalia","South Africa","South Korea","South Sudan","Spain","Sri Lanka","Sudan","Suriname","Sweden","Switzerland","Syria","Tajikistan","Tanzania","Thailand","Timor-Leste","Togo","Tonga","Trinidad and Tobago","Tunisia","Türkiye","Turkmenistan","Tuvalu","Uganda","Ukraine","United Arab Emirates","United Kingdom","United States","Uruguay","Uzbekistan","Vanuatu","Vatican City","Venezuela","Vietnam","Yemen","Zambia","Zimbabwe"];
+
+const DATA = {
+"India":{flag:"🇮🇳",language:"Hindi • English • regional languages",festival:"Bihu • Diwali • Holi",food:"Bihu Pitha • Biryani • Dosa",region:"Assam",video:"https://upload.wikimedia.org/wikipedia/commons/e/e3/Bihu_world_record.webm",story:"Bihu marks important seasonal celebrations in Assam and is strongly connected with music, dance, community and agriculture."},
+"China":{flag:"🇨🇳",language:"Mandarin • regional languages",festival:"Lunar New Year • Mid-Autumn",food:"Dim sum • Hot pot",region:"Yunnan",video:"https://upload.wikimedia.org/wikipedia/commons/1/18/Traditional_chinese_dance_in_Gubei.webm",story:"Chinese cultural traditions vary widely by region, with festivals, family rituals, food and performing arts forming a rich cultural landscape."},
+"France":{flag:"🇫🇷",language:"French",festival:"Bastille Day • Fête de la Musique",food:"Crêpes • Ratatouille",region:"Provence",video:"https://upload.wikimedia.org/wikipedia/commons/2/23/Parapara_dance_2009_France.webm",story:"French culture combines regional traditions, food, music, arts and national celebrations with strong local identities."},
+"Japan":{flag:"🇯🇵",language:"Japanese",festival:"Hanami • Obon • Gion Matsuri",food:"Sushi • Ramen • Tempura",region:"Kyoto",video:"https://upload.wikimedia.org/wikipedia/commons/3/31/Traditional_Shinto_Wedding_Procession_and_Ceremony.webm",story:"Japanese culture blends seasonal festivals, regional food, traditional arts and long-standing ceremonial practices."},
+"Mexico":{flag:"🇲🇽",language:"Spanish • Indigenous languages",festival:"Día de Muertos • Guelaguetza",food:"Tacos • Mole",region:"Oaxaca",video:"https://upload.wikimedia.org/wikipedia/commons/f/f2/Chinelos_en_la_Bas%C3%ADlica_de_Guadalupe.webm",story:"Mexican culture is shaped by Indigenous and Spanish influences, with vibrant festivals, food, music and regional traditions."},
+"South Korea":{flag:"🇰🇷",language:"Korean",festival:"Seollal • Chuseok",food:"Kimchi • Bibimbap",region:"Jeju",video:"https://upload.wikimedia.org/wikipedia/commons/c/cd/Korean_Traditional_Music_%28Part_Five%29.webm",story:"Korean culture combines traditional music, food, family celebrations and regional heritage with modern global influence."},
+"Brazil":{flag:"🇧🇷",language:"Portuguese",festival:"Carnival • Festa Junina",food:"Feijoada • Acarajé",region:"Bahia",video:"",story:"Brazilian culture is highly diverse, with strong regional traditions in music, dance, food and festivals."},
+"Egypt":{flag:"🇪🇬",language:"Arabic",festival:"Ramadan • Sham El-Nessim",food:"Koshari • Ful",region:"Luxor",video:"",story:"Egyptian cultural heritage spans ancient history, religious traditions, food, music and regional communities along the Nile."},
+"Italy":{flag:"🇮🇹",language:"Italian",festival:"Carnevale • Festa della Repubblica",food:"Pizza • Pasta",region:"Sicily",video:"",story:"Italian culture is deeply regional, with distinctive food, festivals, crafts, music and traditions across the country."},
+"South Africa":{flag:"🇿🇦",language:"11 official languages",festival:"Heritage Day • Cape Town Carnival",food:"Bobotie • Bunny chow",region:"Western Cape",video:"",story:"South Africa has a rich multicultural heritage expressed through many languages, cuisines, music, dance and regional traditions."}
+};
+
+const COUNTRY_CULTURE_DATA = {"Afghanistan":{"language":"Dari • Pashto","festival":"Nowruz • Eid al-Fitr","food":"Kabuli palaw • Mantu","region":"Kabul & Herat","story":"Afghan culture blends Persian, Central Asian and South Asian influences.","video":""},"Albania":{"language":"Albanian","festival":"Dita e Verës • Independence Day","food":"Tavë kosi • Byrek","region":"Tirana & Berat","story":"Mediterranean and Balkan traditions shape Albanian food, music and festivals.","video":""},"Algeria":{"language":"Arabic • Tamazight","festival":"Yennayer • Eid","food":"Couscous • Chakhchoukha","region":"Algiers & Kabylie","story":"North African, Amazigh and Arab traditions are central to Algerian culture.","video":""},"Andorra":{"language":"Catalan","festival":"Meritxell Day • Carnival","food":"Escudella • Trinxat","region":"Andorra la Vella","story":"Pyrenean Catalan traditions shape food, festivals and mountain life.","video":""},"Angola":{"language":"Portuguese • local languages","festival":"Carnival • Independence Day","food":"Muamba de galinha • Funje","region":"Luanda & central highlands","story":"Portuguese and diverse African traditions meet in Angolan culture.","video":""},"Antigua and Barbuda":{"language":"English • Antiguan Creole","festival":"Carnival • Independence Day","food":"Fungee and pepperpot • ducana","region":"St John's & Antigua","story":"Caribbean music, food and carnival are major cultural expressions.","video":""},"Argentina":{"language":"Spanish","festival":"Carnival • Día de la Tradición","food":"Asado • Empanadas • Locro","region":"Buenos Aires & Patagonia","story":"Argentine culture is known for tango, gaucho traditions and regional cuisine.","video":""},"Armenia":{"language":"Armenian","festival":"Vardavar • Navasard • Christmas","food":"Khorovats • Dolma","region":"Yerevan & Lori","story":"Armenian culture has ancient Christian, culinary and craft traditions.","video":""},"Australia":{"language":"English • Aboriginal languages","festival":"Australia Day • NAIDOC Week","food":"Meat pie • Lamington • bush foods","region":"New South Wales & Victoria","story":"Modern Australian culture combines Indigenous heritage with many migrant traditions.","video":""},"Austria":{"language":"German","festival":"Vienna Ball Season • Christmas markets","food":"Wiener schnitzel • Apfelstrudel","region":"Vienna & Salzburg","story":"Austrian traditions feature classical music, Alpine customs and café culture.","video":""},"Azerbaijan":{"language":"Azerbaijani","festival":"Novruz • Republic Day","food":"Plov • Dolma • Qutab","region":"Baku & Sheki","story":"Caucasian, Turkic and Persian influences shape Azerbaijani culture.","video":""},"Bahamas":{"language":"English • Bahamian Creole","festival":"Junkanoo • Independence Day","food":"Conch salad • peas n rice","region":"Nassau & Grand Bahama","story":"Island culture is expressed through Junkanoo, seafood and music.","video":""},"Bahrain":{"language":"Arabic","festival":"Eid • National Day","food":"Machboos • Muhammar","region":"Manama & Muharraq","story":"Gulf Arab traditions and pearl-diving heritage shape Bahrain.","video":""},"Bangladesh":{"language":"Bengali","festival":"Pohela Boishakh • Eid","food":"Hilsa curry • Bhapa pitha","region":"Dhaka & Chattogram","story":"Bengali language, river life, literature and food define much of Bangladeshi culture.","video":""},"Barbados":{"language":"English • Bajan","festival":"Crop Over • Independence Day","food":"Cou-cou and flying fish • fish cakes","region":"Bridgetown & coast","story":"Bajan music, carnival and food reflect African, British and Caribbean heritage.","video":""},"Belarus":{"language":"Belarusian • Russian","festival":"Maslenitsa • Kupalle","food":"Draniki • Machanka","region":"Minsk & Polesia","story":"East European folk traditions, crafts and seasonal celebrations remain important.","video":""},"Belgium":{"language":"Dutch • French • German","festival":"Carnival • National Day","food":"Moules-frites • waffles • chocolate","region":"Brussels & Flanders","story":"Belgian culture is strongly regional with distinct Flemish and Walloon traditions.","video":""},"Belize":{"language":"English • Spanish • Kriol","festival":"Garifuna Settlement Day • Carnival","food":"Rice and beans • hudut","region":"Belize City & coast","story":"Maya, Garifuna, Mestizo and Creole traditions create a highly diverse culture.","video":""},"Benin":{"language":"French • Fon • Yoruba","festival":"Vodun festivals • National Day","food":"Amiwo • pâte with sauces","region":"Abomey & Porto-Novo","story":"West African traditions, Vodun heritage and colorful ceremonies are prominent.","video":""},"Bhutan":{"language":"Dzongkha","festival":"Tshechu festivals • Losar","food":"Ema datshi • red rice","region":"Thimphu & Paro","story":"Buddhist traditions, monasteries, textiles and mountain communities shape Bhutanese culture.","video":""},"Bolivia":{"language":"Spanish • Quechua • Aymara","festival":"Carnival of Oruro • Alasitas","food":"Salteñas • pique macho","region":"La Paz & Altiplano","story":"Andean Indigenous and Spanish traditions strongly influence Bolivian culture.","video":""},"Bosnia and Herzegovina":{"language":"Bosnian • Serbian • Croatian","festival":"Bajram • Sarajevo Film Festival","food":"Ćevapi • burek","region":"Sarajevo & Mostar","story":"Ottoman, Slavic and Austro-Hungarian influences meet in Bosnian culture.","video":""},"Botswana":{"language":"English • Setswana","festival":"Dithubaruba • President's Day","food":"Seswaa • bogobe","region":"Gaborone & Okavango","story":"Setswana traditions, cattle culture, music and wildlife landscapes are important.","video":""},"Brazil":{"language":"Portuguese","festival":"Carnival • Festa Junina","food":"Feijoada • Acarajé","region":"Bahia & Rio de Janeiro","story":"Brazilian culture is highly diverse in music, dance, food and regional festivals.","video":""},"Brunei":{"language":"Malay","festival":"Hari Raya • National Day","food":"Ambuyat • nasi katok","region":"Bandar Seri Begawan & Temburong","story":"Malay and Islamic traditions shape Bruneian culture.","video":""},"Bulgaria":{"language":"Bulgarian","festival":"Kukeri • Rose Festival • Baba Marta","food":"Banitsa • Shopska salad","region":"Sofia & Plovdiv","story":"Balkan folk customs, rose-growing and Orthodox traditions are prominent.","video":""},"Burkina Faso":{"language":"French • Mooré and local languages","festival":"FESPACO • Ramadan/Eid","food":"Riz gras • tô","region":"Ouagadougou & Bobo-Dioulasso","story":"West African music, dance, crafts and community traditions are central.","video":""},"Burundi":{"language":"Kirundi • French","festival":"Umuganuro • Independence Day","food":"Ubugali • beans and banana dishes","region":"Bujumbura & highlands","story":"Drumming, dance and farming traditions are important cultural expressions.","video":""},"Cabo Verde":{"language":"Portuguese • Creole","festival":"Carnival of Mindelo • Independence Day","food":"Cachupa • pastéis de milho","region":"Mindelo & Santiago","story":"Creole island culture is known for morna music, dance and seafood-rich cuisine.","video":""},"Cambodia":{"language":"Khmer","festival":"Khmer New Year • Pchum Ben","food":"Amok • kuy teav","region":"Phnom Penh & Siem Reap","story":"Khmer Buddhist traditions, temples, dance and cuisine shape Cambodian culture.","video":""},"Cameroon":{"language":"French • English • local languages","festival":"Ngouon • Ngondo","food":"Ndolé • eru","region":"Yaoundé & coastal regions","story":"Many ethnic traditions contribute to Cameroonian music, food and festivals.","video":""},"Canada":{"language":"English • French","festival":"Canada Day • Indigenous cultural celebrations","food":"Poutine • tourtière","region":"Quebec & British Columbia","story":"Canadian culture combines Indigenous heritage with French, British and global influences.","video":""},"Central African Republic":{"language":"French • Sango","festival":"National Day • local community festivals","food":"Fufu • cassava and peanut dishes","region":"Bangui & forest regions","story":"Sango-speaking and diverse Central African traditions shape cultural life.","video":""},"Chad":{"language":"French • Arabic","festival":"Gerewol • Eid","food":"Daraba • millet dishes","region":"N'Djamena & Sahel","story":"Sahelian pastoral and agricultural traditions are reflected in food, dress and ceremonies.","video":""},"Chile":{"language":"Spanish","festival":"Fiestas Patrias • Tapati","food":"Empanadas • pastel de choclo","region":"Santiago & Patagonia","story":"Chilean culture blends Spanish, Indigenous and regional traditions.","video":""},"China":{"language":"Mandarin • regional languages","festival":"Lunar New Year • Mid-Autumn","food":"Dim sum • hot pot","region":"Beijing & Yunnan","story":"Chinese traditions vary greatly by region, with festivals, family rituals and regional cuisines.","video":""},"Colombia":{"language":"Spanish","festival":"Carnival of Barranquilla • Feria de las Flores","food":"Arepas • bandeja paisa","region":"Antioquia & Caribbean coast","story":"Colombian culture is shaped by Indigenous, African and Spanish heritage.","video":""},"Comoros":{"language":"Comorian • French • Arabic","festival":"Eid • National Day","food":"Langouste • coconut curries","region":"Moroni & Grande Comore","story":"Island, African, Arab and Indian Ocean traditions shape Comorian culture.","video":""},"Congo":{"language":"French • Lingala","festival":"FESPAM • National Day","food":"Moambe • saka-saka","region":"Brazzaville & Pool","story":"Riverine Central African traditions influence music, dance and cuisine.","video":""},"Costa Rica":{"language":"Spanish","festival":"Fiestas de Zapote • Independence Day","food":"Gallo pinto • casado","region":"San José & Guanacaste","story":"Costa Rican culture values community, music, coffee and regional traditions.","video":""},"Croatia":{"language":"Croatian","festival":"Dubrovnik Summer Festival • Carnival","food":"Peka • štrukli","region":"Dalmatia & Zagreb","story":"Adriatic, Central European and Balkan influences shape Croatian traditions.","video":""},"Cuba":{"language":"Spanish","festival":"Carnival of Santiago • Revolution Day","food":"Ropa vieja • congrí","region":"Havana & Santiago","story":"Cuban music, dance, Afro-Caribbean traditions and food are culturally important.","video":""},"Cyprus":{"language":"Greek • Turkish","festival":"Limassol Carnival • Easter","food":"Halloumi • souvlaki","region":"Nicosia & Limassol","story":"Mediterranean traditions blend Greek, Turkish and island heritage.","video":""},"Czechia":{"language":"Czech","festival":"Masopust • Christmas markets","food":"Svíčková • goulash","region":"Prague & Moravia","story":"Czech culture features folk customs, beer traditions, music and regional foods.","video":""},"Denmark":{"language":"Danish","festival":"Fastelavn • Midsummer","food":"Smørrebrød • æbleskiver","region":"Copenhagen & Jutland","story":"Nordic traditions emphasize seasonal celebrations, design and communal meals.","video":""},"Djibouti":{"language":"Somali • Afar • French","festival":"Eid • Independence Day","food":"Skoudehkaris • sambusa","region":"Djibouti City & Tadjoura","story":"Horn of Africa, Somali, Afar and Arab traditions shape Djiboutian culture.","video":""},"Dominica":{"language":"English • Creole","festival":"World Creole Music Festival • Carnival","food":"Mountain chicken • callaloo","region":"Roseau & Kalinago Territory","story":"Creole, African and Indigenous Kalinago traditions are prominent.","video":""},"Dominican Republic":{"language":"Spanish","festival":"Carnival • Merengue Festival","food":"La bandera • mangú","region":"Santo Domingo & Cibao","story":"Merengue, bachata, baseball and Caribbean food are major cultural markers.","video":""},"Ecuador":{"language":"Spanish • Kichwa","festival":"Inti Raymi • Mama Negra","food":"Locro de papa • encebollado","region":"Quito & Andes","story":"Andean Indigenous and Spanish traditions shape Ecuadorian culture.","video":""},"El Salvador":{"language":"Spanish","festival":"August Festivals • Day of the Cross","food":"Pupusas • yuca frita","region":"San Salvador & Santa Ana","story":"Pipil and Spanish influences are visible in food, crafts and festivals.","video":""},"Equatorial Guinea":{"language":"Spanish • French • Fang","festival":"National Day • local festivals","food":"Succotash-style vegetable dishes • plantain","region":"Malabo & Bata","story":"Central African traditions mix with Spanish colonial influence.","video":""},"Eritrea":{"language":"Tigrinya • Arabic • English","festival":"Meskel • Independence Day","food":"Zigni • injera","region":"Asmara & highlands","story":"Horn of Africa traditions include coffee ceremonies, music and communal foods.","video":""},"Estonia":{"language":"Estonian","festival":"Jaanipäev • Song Festival","food":"Verivorst • kama","region":"Tallinn & Saaremaa","story":"Baltic and Nordic influences shape Estonian seasonal customs and song traditions.","video":""},"Eswatini":{"language":"siSwati • English","festival":"Incwala • Umhlanga Reed Dance","food":"Sishwala • meat and maize dishes","region":"Lobamba & Mbabane","story":"Swazi ceremonies, dance and monarchy are important cultural features.","video":""},"Ethiopia":{"language":"Amharic • Oromo and many languages","festival":"Timkat • Meskel","food":"Injera • doro wat","region":"Addis Ababa & Lalibela","story":"Ancient Christian, Muslim and diverse ethnic traditions shape Ethiopian culture.","video":""},"Fiji":{"language":"English • iTaukei • Fiji Hindi","festival":"Holi • Fiji Day • Bula Festival","food":"Kokoda • lovo","region":"Suva & Viti Levu","story":"Pacific Island, Indian and Indigenous iTaukei traditions coexist.","video":""},"Finland":{"language":"Finnish • Swedish","festival":"Juhannus • Vappu","food":"Karjalanpiirakka • salmon soup","region":"Helsinki & Lapland","story":"Nordic seasonal traditions, sauna culture and nature are central.","video":""},"Gabon":{"language":"French • local languages","festival":"Fête des Cultures • Independence Day","food":"Poulet nyembwe • manioc","region":"Libreville & rainforest regions","story":"Equatorial African traditions are expressed through masks, dance, music and food.","video":""},"Gambia":{"language":"English • Mandinka • Wolof and others","festival":"Roots Homecoming • Independence Day","food":"Domoda • benachin","region":"Banjul & coastal Gambia","story":"West African traditions, griot music and river culture are important.","video":""},"Georgia":{"language":"Georgian","festival":"Tbilisoba • Alaverdoba","food":"Khachapuri • khinkali","region":"Tbilisi & Kakheti","story":"Georgian polyphonic singing, wine culture and supra feasts are distinctive.","video":""},"Germany":{"language":"German","festival":"Oktoberfest • Christmas markets","food":"Bratwurst • pretzels","region":"Bavaria & Berlin","story":"German culture is highly regional, with strong folk, food and festival traditions.","video":""},"Ghana":{"language":"English • Akan and many languages","festival":"Homowo • Akwasidae","food":"Jollof • fufu","region":"Accra & Ashanti","story":"West African festivals, drumming, textiles and food are major cultural expressions.","video":""},"Greece":{"language":"Greek","festival":"Easter • Apokries","food":"Moussaka • souvlaki","region":"Athens & Crete","story":"Ancient heritage, Orthodox traditions, island life and Mediterranean cuisine shape Greece.","video":""},"Grenada":{"language":"English • Grenadian Creole","festival":"Spicemas • Independence Day","food":"Oil down • callaloo soup","region":"St George's & Grenadines","story":"Caribbean carnival, spice culture and African heritage are prominent.","video":""},"Guatemala":{"language":"Spanish • Mayan languages","festival":"Semana Santa • Day of the Dead","food":"Pepian • tamales","region":"Antigua & Lake Atitlán","story":"Maya and Spanish traditions combine in textiles, food and festivals.","video":""},"Guinea":{"language":"French • local languages","festival":"Fête des Masques • Independence Day","food":"Jollof-style rice • peanut sauces","region":"Conakry & Fouta Djallon","story":"West African music, dance and regional ethnic traditions are central.","video":""},"Guinea-Bissau":{"language":"Portuguese • Creole","festival":"Carnival • Tabaski","food":"Caldo de mancarra • rice dishes","region":"Bissau & Bijagós","story":"Portuguese and West African traditions mix in music, food and ceremonies.","video":""},"Guyana":{"language":"English • Guyanese Creole","festival":"Mashramani • Diwali","food":"Pepperpot • cook-up rice","region":"Georgetown & Essequibo","story":"Indo-Guyanese, Afro-Guyanese and Indigenous traditions create a multicultural culture.","video":""},"Haiti":{"language":"Haitian Creole • French","festival":"Carnival • Fête Gede","food":"Griot • soup joumou","region":"Port-au-Prince & Jacmel","story":"African, French and Caribbean traditions shape Haitian music, art and food.","video":""},"Honduras":{"language":"Spanish • Garifuna and Indigenous languages","festival":"Feria Juniana • Semana Santa","food":"Baleadas • sopa de caracol","region":"San Pedro Sula & Caribbean coast","story":"Mestizo, Indigenous and Garifuna traditions are important.","video":""},"Hungary":{"language":"Hungarian","festival":"Busójárás • St Stephen's Day","food":"Goulash • lángos","region":"Budapest & Transdanubia","story":"Central European folk traditions, paprika cuisine and music shape Hungary.","video":""},"Iceland":{"language":"Icelandic","festival":"Þorrablót • National Day","food":"Lamb • skyr • kleinur","region":"Reykjavík & North Iceland","story":"Nordic sagas, seasonal customs and fishing culture influence Icelandic life.","video":""},"Indonesia":{"language":"Indonesian • regional languages","festival":"Nyepi • Eid • Galungan","food":"Nasi goreng • rendang • satay","region":"Java & Bali","story":"Thousands of islands contribute diverse food, languages, ceremonies and arts.","video":""},"Iran":{"language":"Persian • regional languages","festival":"Nowruz • Yalda Night","food":"Ghormeh sabzi • chelow kebab","region":"Tehran & Isfahan","story":"Persian literature, Nowruz, crafts and regional cuisine are culturally significant.","video":""},"Iraq":{"language":"Arabic • Kurdish","festival":"Nowruz • Eid","food":"Masgouf • dolma","region":"Baghdad & Kurdistan","story":"Mesopotamian heritage and Arab, Kurdish and other traditions shape Iraq.","video":""},"Ireland":{"language":"Irish • English","festival":"St Patrick's Day • Samhain traditions","food":"Irish stew • boxty","region":"Dublin & west coast","story":"Celtic heritage, music, storytelling and seasonal festivals remain influential.","video":""},"Israel":{"language":"Hebrew • Arabic","festival":"Passover • Purim • Sukkot","food":"Falafel • shakshuka","region":"Jerusalem & Galilee","story":"Jewish, Arab and Mediterranean traditions coexist across diverse communities.","video":""},"Italy":{"language":"Italian","festival":"Carnevale • Festa della Repubblica","food":"Pizza • pasta • risotto","region":"Sicily & Tuscany","story":"Italian culture is deeply regional with distinctive food, crafts, music and festivals.","video":""},"Jamaica":{"language":"English • Jamaican Patois","festival":"Reggae Sumfest • Carnival","food":"Jerk chicken • ackee and saltfish","region":"Kingston & Montego Bay","story":"Jamaican music, food and African-Caribbean traditions have global influence.","video":""},"Japan":{"language":"Japanese","festival":"Hanami • Obon • Gion Matsuri","food":"Sushi • ramen • tempura","region":"Tokyo & Kyoto","story":"Japanese culture blends seasonal festivals, regional food, arts and ceremonial traditions.","video":""},"Jordan":{"language":"Arabic","festival":"Jerash Festival • Eid","food":"Mansaf • maqluba","region":"Amman & Petra","story":"Levantine hospitality, Bedouin traditions and ancient heritage shape Jordan.","video":""},"Kazakhstan":{"language":"Kazakh • Russian","festival":"Nauryz • Independence Day","food":"Beshbarmak • baursak","region":"Astana & Almaty","story":"Steppe traditions, nomadic heritage and Turkic culture are prominent.","video":""},"Kenya":{"language":"Swahili • English","festival":"Madaraka Day • Mashujaa Day","food":"Ugali • nyama choma","region":"Nairobi & Coast","story":"Many ethnic traditions, Swahili culture and regional foods define Kenya.","video":""},"Kiribati":{"language":"English • Gilbertese","festival":"Te Maeva Nui • Independence Day","food":"Palusami • coconut and fish dishes","region":"South Tarawa & outer islands","story":"Micronesian island traditions center on community, dance, ocean and food.","video":""},"Kuwait":{"language":"Arabic","festival":"National Day • Eid","food":"Machboos • margoog","region":"Kuwait City & coast","story":"Gulf Arab hospitality, pearl heritage and Islamic traditions are important.","video":""},"Laos":{"language":"Lao","festival":"Pi Mai • Boun Bang Fai","food":"Laap • sticky rice","region":"Luang Prabang & Vientiane","story":"Theravada Buddhist traditions, river life and regional food shape Laos.","video":""},"Latvia":{"language":"Latvian","festival":"Jāņi • Song and Dance Festival","food":"Grey peas with bacon • rye bread","region":"Riga & Kurzeme","story":"Baltic seasonal customs, choral singing and folk crafts are central.","video":""},"Lebanon":{"language":"Arabic • French","festival":"Eid • Christmas • Baalbek Festival","food":"Tabbouleh • kibbeh • manakish","region":"Beirut & Bekaa","story":"Levantine food, music, religious diversity and ancient heritage shape Lebanon.","video":""},"Lesotho":{"language":"Sesotho • English","festival":"Mokhotlong festivals • Independence Day","food":"Papa • moroho","region":"Maseru & highlands","story":"Basotho traditions include blankets, horseback culture, music and communal ceremonies.","video":""},"Liberia":{"language":"English • Liberian languages","festival":"Independence Day • cultural festivals","food":"Jollof rice • cassava leaf","region":"Monrovia & coastal Liberia","story":"West African traditions combine with a distinctive Americo-Liberian history.","video":""},"Libya":{"language":"Arabic","festival":"Ghadames Festival • Eid","food":"Couscous • bazeen","region":"Tripoli & Fezzan","story":"North African Arab and Amazigh traditions shape Libyan culture.","video":""},"Liechtenstein":{"language":"German","festival":"National Day • Fasnacht","food":"Käsknöpfle • rösti","region":"Vaduz & Alpine villages","story":"Alpine German-speaking traditions are central to food and festivals.","video":""},"Lithuania":{"language":"Lithuanian","festival":"Joninės • Užgavėnės","food":"Cepelinai • kugelis","region":"Vilnius & Samogitia","story":"Baltic folk traditions, choral singing and seasonal rituals are important.","video":""},"Luxembourg":{"language":"Luxembourgish • French • German","festival":"Schueberfouer • National Day","food":"Judd mat Gaardebounen • gromperekichelcher","region":"Luxembourg City & Moselle","story":"Multilingual European traditions mix with local Luxembourgish customs.","video":""},"Madagascar":{"language":"Malagasy • French","festival":"Alahamadi Be • Independence Day","food":"Romazava • ravitoto","region":"Antananarivo & highlands","story":"Austronesian and African influences create distinctive Malagasy traditions.","video":""},"Malawi":{"language":"English • Chichewa","festival":"Lake of Stars • Independence Day","food":"Nsima • chambo","region":"Lilongwe & Lake Malawi","story":"Music, dance, farming and lake traditions are central to Malawian culture.","video":""},"Malaysia":{"language":"Malay • English • Chinese languages • Tamil","festival":"Hari Raya • Thaipusam • Chinese New Year","food":"Nasi lemak • laksa","region":"Kuala Lumpur & Penang","story":"Malay, Chinese, Indian and Indigenous traditions create a multicultural society.","video":""},"Maldives":{"language":"Dhivehi","festival":"Eid • Independence Day","food":"Mas huni • garudhiya","region":"Malé & atolls","story":"Island life, Islamic traditions and coconut-and-fish cuisine shape Maldivian culture.","video":""},"Mali":{"language":"French • Bambara and others","festival":"Mali Music festivals • Eid","food":"Tiguadege na • tô","region":"Bamako & Timbuktu","story":"Mande heritage, griot music, crafts and Sahelian food are important.","video":""},"Malta":{"language":"Maltese • English","festival":"Festa • Carnival","food":"Pastizzi • rabbit stew","region":"Valletta & Gozo","story":"Mediterranean island culture reflects Arab, Italian and European influences.","video":""},"Marshall Islands":{"language":"Marshallese • English","festival":"Manit Day • Constitution Day","food":"Breadfruit • coconut and fish","region":"Majuro & outer atolls","story":"Micronesian navigation, ocean traditions and community celebrations are central.","video":""},"Mauritania":{"language":"Arabic • Pulaar • Soninke","festival":"Eid • National Day","food":"Thieboudienne • couscous","region":"Nouakchott & Adrar","story":"Saharan Arab and West African traditions meet in Mauritanian culture.","video":""},"Mauritius":{"language":"English • French • Mauritian Creole","festival":"Divali • Cavadee • Chinese Spring Festival","food":"Dholl puri • rougaille","region":"Port Louis & coastal towns","story":"Indian, African, Chinese, French and Creole traditions coexist.","video":""},"Mexico":{"language":"Spanish • Indigenous languages","festival":"Día de Muertos • Guelaguetza","food":"Tacos • mole • tamales","region":"Oaxaca & Yucatán","story":"Indigenous and Spanish heritage create diverse regional food, music and festivals.","video":""},"Micronesia":{"language":"English • local languages","festival":"Constitution Day • local island festivals","food":"Breadfruit • taro • fish","region":"Pohnpei & Chuuk","story":"Micronesian island traditions center on ocean, clan and community life.","video":""},"Moldova":{"language":"Romanian","festival":"Mărțișor • National Wine Day","food":"Mămăligă • plăcinte","region":"Chișinău & wine regions","story":"Romanian and Eastern European traditions are reflected in wine, food and folk customs.","video":""},"Monaco":{"language":"French • Monégasque","festival":"National Day • Sainte Dévote","food":"Barbagiuàn • fougasse","region":"Monaco-Ville & Monte Carlo","story":"Mediterranean and French-Italian traditions shape Monégasque culture.","video":""},"Mongolia":{"language":"Mongolian","festival":"Naadam • Tsagaan Sar","food":"Buuz • khuushuur","region":"Ulaanbaatar & steppe","story":"Nomadic pastoral culture, horses and wrestling are central to Mongolia.","video":""},"Montenegro":{"language":"Montenegrin • Serbian","festival":"Boka Night • Christmas","food":"Njeguški pršut • kačamak","region":"Kotor & Cetinje","story":"Adriatic, Balkan and mountain traditions shape Montenegrin culture.","video":""},"Morocco":{"language":"Arabic • Amazigh","festival":"Mawlid • Fes Festival • Eid","food":"Couscous • tagine","region":"Marrakesh & Fes","story":"Amazigh, Arab and Andalusian influences shape Moroccan food and festivals.","video":""},"Mozambique":{"language":"Portuguese • local languages","festival":"Mapiko festivals • Independence Day","food":"Matapa • peri-peri prawns","region":"Maputo & Nampula","story":"Swahili, Bantu, Portuguese and coastal traditions shape Mozambique.","video":""},"Myanmar":{"language":"Burmese • ethnic languages","festival":"Thingyan • Tazaungdaing","food":"Mohinga • laphet","region":"Yangon & Mandalay","story":"Buddhist traditions, festivals and diverse ethnic cultures are prominent.","video":""},"Namibia":{"language":"English • Afrikaans • local languages","festival":"Independence Day • Windhoek Oktoberfest","food":"Kapana • mahangu porridge","region":"Windhoek & Namibia north","story":"San, Herero, Ovambo and other traditions shape Namibian culture.","video":""},"Nauru":{"language":"Nauruan • English","festival":"Angam Day • Independence Day","food":"Coconut and fish dishes","region":"Yaren & coastal communities","story":"Micronesian island heritage is expressed through dance, food and community.","video":""},"Nepal":{"language":"Nepali • many regional languages","festival":"Dashain • Tihar • Holi","food":"Dal bhat • momo","region":"Kathmandu Valley & Himalayas","story":"Hindu and Buddhist traditions, mountain communities and festivals shape Nepal.","video":""},"Netherlands":{"language":"Dutch","festival":"King's Day • Sinterklaas","food":"Stroopwafels • herring • stamppot","region":"Amsterdam & Friesland","story":"Dutch maritime, farming and seasonal traditions remain influential.","video":""},"New Zealand":{"language":"English • Māori","festival":"Matariki • Waitangi Day","food":"Hāngi • pavlova","region":"Auckland & South Island","story":"Māori heritage and Pacific-European influences shape New Zealand culture.","video":""},"Nicaragua":{"language":"Spanish","festival":"La Purísima • Palo de Mayo","food":"Gallo pinto • nacatamales","region":"Managua & Caribbean coast","story":"Mestizo and Indigenous-Caribbean traditions shape festivals and food.","video":""},"Niger":{"language":"French • Hausa and other languages","festival":"Guerewol • Eid","food":"Millet dishes • dambou","region":"Niamey & Agadez","story":"Sahelian Hausa, Tuareg and other traditions shape cultural life.","video":""},"Nigeria":{"language":"English • Hausa • Yoruba • Igbo","festival":"Durbar • Osun-Osogbo • New Yam Festival","food":"Jollof rice • egusi soup","region":"Lagos & northern Nigeria","story":"Hundreds of ethnic traditions contribute to Nigerian music, food, dress and festivals.","video":""},"North Korea":{"language":"Korean","festival":"Lunar New Year • Chuseok","food":"Naengmyeon • kimchi","region":"Pyongyang & Hamgyong","story":"Korean language, food and traditional holidays remain culturally important.","video":""},"North Macedonia":{"language":"Macedonian • Albanian","festival":"Ilinden • Ohrid Summer Festival","food":"Tavče gravče • ajvar","region":"Skopje & Ohrid","story":"Balkan, Slavic and Ottoman influences shape Macedonian culture.","video":""},"Norway":{"language":"Norwegian","festival":"Constitution Day • Midsummer","food":"Fårikål • salmon","region":"Oslo & western fjords","story":"Nordic maritime, Sami and seasonal traditions are important.","video":""},"Oman":{"language":"Arabic","festival":"National Day • Eid","food":"Shuwa • majboos","region":"Muscat & Dhofar","story":"Arabian hospitality, frankincense heritage and coastal traditions shape Oman.","video":""},"Pakistan":{"language":"Urdu • English • regional languages","festival":"Eid • Basant • Independence Day","food":"Biryani • nihari • chapli kebab","region":"Punjab & Sindh","story":"South Asian, Persian, Central Asian and Islamic traditions shape Pakistan.","video":""},"Palau":{"language":"Palauan • English","festival":"Beltane • Independence Day","food":"Taro • fish and coconut dishes","region":"Koror & Babeldaob","story":"Micronesian island heritage, ocean life and community traditions are central.","video":""},"Palestine":{"language":"Arabic","festival":"Olive harvest • Eid • Christmas in Bethlehem","food":"Musakhan • maqluba • knafeh","region":"West Bank & Gaza","story":"Levantine food, village traditions, religious heritage and olive culture are important.","video":""},"Panama":{"language":"Spanish","festival":"Carnival • Pollera festivals","food":"Sancocho • ceviche","region":"Panama City & Azuero","story":"Indigenous, Afro-Caribbean and Spanish traditions shape Panamanian culture.","video":""},"Papua New Guinea":{"language":"Tok Pisin • English • Hiri Motu","festival":"Goroka Show • Independence Day","food":"Mumu • sago and taro","region":"Port Moresby & Highlands","story":"Hundreds of languages and community traditions create extraordinary cultural diversity.","video":""},"Paraguay":{"language":"Spanish • Guaraní","festival":"San Juan Ára • Independence Day","food":"Sopa paraguaya • chipa","region":"Asunción & eastern Paraguay","story":"Guaraní and Spanish traditions are central to Paraguayan identity.","video":""},"Peru":{"language":"Spanish • Quechua • Aymara","festival":"Inti Raymi • Fiesta de la Candelaria","food":"Ceviche • lomo saltado","region":"Cusco & Andes","story":"Andean Indigenous heritage and Spanish influences shape Peruvian food and festivals.","video":""},"Philippines":{"language":"Filipino • English • regional languages","festival":"Sinulog • Ati-Atihan • Christmas","food":"Adobo • sinigang • lechon","region":"Cebu & Luzon","story":"Austronesian, Spanish, Chinese and American influences shape Philippine culture.","video":""},"Poland":{"language":"Polish","festival":"Wianki • All Saints' Day • Christmas","food":"Pierogi • żurek","region":"Kraków & Masuria","story":"Slavic folk traditions, Catholic celebrations and regional cuisine are prominent.","video":""},"Portugal":{"language":"Portuguese","festival":"São João • Santo António • Carnival","food":"Bacalhau • pastel de nata","region":"Lisbon & Porto","story":"Iberian, Atlantic and regional traditions shape Portuguese food and festivals.","video":""},"Qatar":{"language":"Arabic","festival":"National Day • Eid","food":"Machboos • harees","region":"Doha & Al Wakrah","story":"Gulf Arab heritage, pearl diving and Islamic traditions are culturally important.","video":""},"Romania":{"language":"Romanian","festival":"Mărțișor • Easter • Sânziene","food":"Sarmale • mămăligă","region":"Transylvania & Moldavia","story":"Balkan, Latin and Eastern European traditions shape Romanian culture.","video":""},"Russia":{"language":"Russian • many regional languages","festival":"Maslenitsa • Victory Day","food":"Pelmeni • blini • shchi","region":"Moscow & Siberia","story":"Russian and many regional cultures span a vast geographic area.","video":""},"Rwanda":{"language":"Kinyarwanda • English • French","festival":"Umuganura • Kwita Izina","food":"Isombe • brochettes","region":"Kigali & Northern Province","story":"Community, dance, drumming and agricultural traditions are central.","video":""},"Saint Kitts and Nevis":{"language":"English","festival":"Culturama • Carnival","food":"Goat water • saltfish","region":"Basseterre & Nevis","story":"Caribbean carnival, music and island cuisine shape local culture.","video":""},"Saint Lucia":{"language":"English • Saint Lucian Creole","festival":"Saint Lucia Jazz • Carnival","food":"Green fig and saltfish • bouyon","region":"Castries & Soufrière","story":"Caribbean, African, French and British influences coexist.","video":""},"Saint Vincent and the Grenadines":{"language":"English","festival":"Vincy Mas • Nine Mornings","food":"Roasted breadfruit and jackfish","region":"Kingstown & Grenadines","story":"Caribbean music, carnival and island food are central.","video":""},"Samoa":{"language":"Samoan • English","festival":"Teuila Festival • White Sunday","food":"Palusami • oka","region":"Apia & Upolu","story":"Fa'a Samoa emphasizes family, community, land and ceremony.","video":""},"San Marino":{"language":"Italian","festival":"Medieval Days • Feast of Saint Marinus","food":"Torta Tre Monti • piadina","region":"San Marino City","story":"Italian-heritage traditions and medieval civic history shape culture.","video":""},"Sao Tome and Principe":{"language":"Portuguese • Forro","festival":"São Tomé cultural festivals • Independence Day","food":"Calulu • banana and fish dishes","region":"São Tomé & Príncipe island","story":"Creole island culture blends African and Portuguese influences.","video":""},"Saudi Arabia":{"language":"Arabic","festival":"Janadriyah • National Day • Eid","food":"Kabsa • jareesh","region":"Riyadh & Hejaz","story":"Arabian, Islamic and Bedouin traditions shape Saudi culture.","video":""},"Senegal":{"language":"French • Wolof and others","festival":"Tabaski • Saint-Louis Jazz Festival","food":"Thieboudienne • yassa","region":"Dakar & Saint-Louis","story":"West African Muslim traditions, music and hospitality are prominent.","video":""},"Serbia":{"language":"Serbian","festival":"Slava • Guča Trumpet Festival","food":"Ćevapi • sarma","region":"Belgrade & Šumadija","story":"Slavic Orthodox traditions, folk music and hearty regional food are important.","video":""},"Seychelles":{"language":"Seychellois Creole • English • French","festival":"Carnaval de Victoria • Creole Festival","food":"Fish curry • ladob","region":"Mahé & Praslin","story":"Creole island culture blends African, French, Indian and maritime traditions.","video":""},"Sierra Leone":{"language":"English • Krio","festival":"Independence Day • Bintumani festivals","food":"Cassava leaves • jollof","region":"Freetown & Bo","story":"West African, Krio and coastal traditions shape food and music.","video":""},"Singapore":{"language":"English • Malay • Mandarin • Tamil","festival":"Chinese New Year • Deepavali • Hari Raya","food":"Hainanese chicken rice • laksa","region":"Central Singapore & ethnic quarters","story":"Chinese, Malay, Indian and global influences create a multicultural city culture.","video":""},"Slovakia":{"language":"Slovak","festival":"Easter • Jánošíkove traditions","food":"Bryndzové halušky • kapustnica","region":"Bratislava & High Tatras","story":"Carpathian folk traditions, crafts and food are important.","video":""},"Slovenia":{"language":"Slovene","festival":"Kurentovanje • St Martin's Day","food":"Potica • jota","region":"Ljubljana & Istria","story":"Alpine, Slavic and Mediterranean influences shape Slovenian culture.","video":""},"Solomon Islands":{"language":"English • Pijin","festival":"Independence Day • local festivals","food":"Taro • fish and coconut","region":"Honiara & Guadalcanal","story":"Melanesian community traditions center on ocean, land and ceremony.","video":""},"Somalia":{"language":"Somali • Arabic","festival":"Eid • Independence Day","food":"Canjeero • bariis iskukaris","region":"Mogadishu & Somaliland regions","story":"Pastoral, coastal and Islamic traditions shape Somali culture.","video":""},"South Sudan":{"language":"English • Arabic • local languages","festival":"Independence Day • cultural festivals","food":"Kisra • stews and sorghum dishes","region":"Juba & Upper Nile","story":"Nilotic and other African traditions are expressed through cattle, dance and ceremony.","video":""},"Spain":{"language":"Spanish • regional languages","festival":"La Tomatina • Semana Santa • San Fermín","food":"Paella • tortilla española","region":"Andalusia & Catalonia","story":"Spain has strong regional identities in food, music, language and festivals.","video":""},"Sri Lanka":{"language":"Sinhala • Tamil","festival":"Sinhala and Tamil New Year • Vesak","food":"Rice and curry • hoppers","region":"Kandy & southern coast","story":"Buddhist, Hindu, Muslim and colonial influences shape Sri Lankan culture.","video":""},"Sudan":{"language":"Arabic • local languages","festival":"Eid • Sufi festivals","food":"Ful medames • kisra","region":"Khartoum & Nile Valley","story":"Nile, Arab, Nubian and African traditions shape Sudanese food and music.","video":""},"Suriname":{"language":"Dutch • Sranan Tongo and others","festival":"Holi Phagwa • Keti Koti","food":"Pom • roti","region":"Paramaribo & interior","story":"Javanese, Indian, African, Indigenous and Dutch traditions coexist.","video":""},"Sweden":{"language":"Swedish","festival":"Midsummer • Lucia","food":"Meatballs • gravlax","region":"Stockholm & Lapland","story":"Nordic seasonal celebrations, fika and Sami heritage are important.","video":""},"Switzerland":{"language":"German • French • Italian • Romansh","festival":"Swiss National Day • Fasnacht","food":"Fondue • rösti","region":"Zurich & Alps","story":"Four-language regional diversity and Alpine traditions shape Swiss culture.","video":""},"Syria":{"language":"Arabic • Kurdish and others","festival":"Eid • Ramadan • local festivals","food":"Kibbeh • maqluba","region":"Damascus & Aleppo","story":"Levantine cuisine, crafts, music and ancient urban traditions are important.","video":""},"Tajikistan":{"language":"Tajik • Russian","festival":"Navruz • Eid","food":"Qurutob • plov","region":"Dushanbe & Pamir","story":"Persianate, Central Asian and mountain traditions shape Tajik culture.","video":""},"Tanzania":{"language":"Swahili • English","festival":"Sauti za Busara • Union Day","food":"Ugali • pilau • nyama choma","region":"Zanzibar & Arusha","story":"Swahili coast, mainland African and island traditions are diverse.","video":""},"Thailand":{"language":"Thai","festival":"Songkran • Loy Krathong","food":"Pad Thai • tom yum • green curry","region":"Bangkok & Chiang Mai","story":"Theravada Buddhism, royal traditions and regional cuisines shape Thailand.","video":""},"Timor-Leste":{"language":"Tetum • Portuguese","festival":"Independence Day • Christmas","food":"Batar da'an • ikan pepes","region":"Dili & eastern mountains","story":"Austronesian, Melanesian and Portuguese influences shape Timorese culture.","video":""},"Togo":{"language":"French • Ewe and others","festival":"Evala • Independence Day","food":"Fufu • akoumé","region":"Lomé & Kpalimé","story":"West African traditions, festivals and crafts are culturally important.","video":""},"Tonga":{"language":"Tongan • English","festival":"Heilala Festival • Constitution Day","food":"Lu pulu • ota ika","region":"Nuku'alofa & Tongatapu","story":"Polynesian community, dance, ceremony and ocean traditions are central.","video":""},"Trinidad and Tobago":{"language":"English • Trinidadian Creole","festival":"Carnival • Divali Nagar","food":"Doubles • roti • pelau","region":"Port of Spain & Tobago","story":"African, Indian, European and Caribbean influences shape music and food.","video":""},"Tunisia":{"language":"Arabic • French","festival":"Carthage Festival • Eid","food":"Couscous • brik","region":"Tunis & Djerba","story":"Maghrebi, Arab and Mediterranean traditions shape Tunisian culture.","video":""},"Türkiye":{"language":"Turkish","festival":"Ramadan • Hıdırellez • Republic Day","food":"Kebab • baklava • meze","region":"Istanbul & Cappadocia","story":"Anatolian, Ottoman, Turkic and Mediterranean traditions shape Turkish culture.","video":""},"Turkmenistan":{"language":"Turkmen","festival":"Nowruz • Melon Day","food":"Plov • manty","region":"Ashgabat & Merv","story":"Turkmen nomadic, Islamic and Central Asian traditions are important.","video":""},"Tuvalu":{"language":"Tuvaluan • English","festival":"Te Aso Fiafia • Independence Day","food":"Pulaka • fish and coconut","region":"Funafuti & outer islands","story":"Polynesian island traditions emphasize community, dance and ocean life.","video":""},"Uganda":{"language":"English • Luganda and others","festival":"Imbalu • Nyege Nyege","food":"Matoke • luwombo","region":"Kampala & Buganda","story":"Many ethnic traditions contribute to Ugandan music, dance and food.","video":""},"Ukraine":{"language":"Ukrainian","festival":"Malanka • Vyshyvanka Day","food":"Borscht • varenyky","region":"Kyiv & Carpathians","story":"Ukrainian folk embroidery, music, food and seasonal customs are distinctive.","video":""},"United Arab Emirates":{"language":"Arabic","festival":"National Day • Eid","food":"Machboos • luqaimat","region":"Dubai & Abu Dhabi","story":"Gulf Arab heritage, Bedouin traditions and modern multicultural life coexist.","video":""},"United Kingdom":{"language":"English • Welsh • Scottish Gaelic • Irish","festival":"Bonfire Night • St Andrew's Day • St David's Day","food":"Fish and chips • Sunday roast","region":"England & Scotland","story":"The UK contains distinct English, Scottish, Welsh and Northern Irish traditions.","video":""},"United States":{"language":"English • many community languages","festival":"Thanksgiving • Independence Day • Indigenous celebrations","food":"BBQ • apple pie • regional cuisines","region":"California & New York","story":"A multicultural society with Indigenous, immigrant and regional food and festival traditions.","video":""},"Uruguay":{"language":"Spanish","festival":"Carnival • Criolla Week","food":"Asado • chivito","region":"Montevideo & interior","story":"Gaucho traditions, mate culture and carnival are important.","video":""},"Vanuatu":{"language":"Bislama • English • French","festival":"Naghol • Independence Day","food":"Laplap • coconut crab","region":"Port Vila & Pentecost","story":"Melanesian kastom traditions, land and community ceremonies are central.","video":""},"Vatican City":{"language":"Italian • Latin","festival":"Christmas • Easter","food":"Roman/Italian cuisine","region":"Vatican & Rome","story":"Catholic religious traditions, art and music dominate cultural life.","video":""},"Venezuela":{"language":"Spanish","festival":"Carnival • Feria de la Chinita","food":"Arepas • pabellón criollo","region":"Caracas & Zulia","story":"Indigenous, African, Spanish and Caribbean influences shape Venezuelan culture.","video":""},"Vietnam":{"language":"Vietnamese","festival":"Tết • Mid-Autumn Festival","food":"Phở • bánh mì • bún chả","region":"Hanoi & Mekong Delta","story":"Vietnamese culture combines regional food, ancestor traditions and seasonal festivals.","video":""},"Yemen":{"language":"Arabic","festival":"Eid • Sana'a festivals","food":"Saltah • mandi","region":"Sana'a & Hadramaut","story":"Arabian, Islamic and ancient South Arabian traditions shape Yemen.","video":""},"Zambia":{"language":"English • Bemba and many languages","festival":"Kuomboka • Umutomboko","food":"Nshima • ifisashi","region":"Lusaka & Western Province","story":"Community ceremonies, music and farming traditions are important.","video":""},"Zimbabwe":{"language":"English • Shona • Ndebele","festival":"Harare International Festival • Heroes' Day","food":"Sadza • muriwo","region":"Harare & Matabeleland","story":"Shona, Ndebele and other traditions shape music, dance, food and ceremonies.","video":""}};
+for(const [country,data] of Object.entries(COUNTRY_CULTURE_DATA)){ if(!DATA[country]) DATA[country]={flag:"🌍",...data}; else DATA[country]={...DATA[country],...data,video:data.video||DATA[country].video||""}; }
+
+
+const INDIA_STATES={
+"Andhra Pradesh":{lang:"Telugu",fest:"Ugadi • Sankranti",food:"Pulihora • Gongura Pachadi • Pootharekulu",region:"Coastal Andhra & Rayalaseema",culture:"Kuchipudi dance, Kalamkari craft and Telugu folk traditions."},
+"Arunachal Pradesh":{lang:"English • tribal languages",fest:"Losar • Solung • Nyokum",food:"Thukpa • Momos • Apong",region:"Tawang & Eastern Himalayas",culture:"Monpa and other Indigenous traditions, with Losar, Solung and Nyokum festivals, folk dances and Himalayan crafts."},
+"Assam":{lang:"Assamese • Bodo • Bengali",fest:"Rongali Bihu • Bhogali Bihu • Kati Bihu",food:"Pitha • Khar • Masor Tenga",region:"Brahmaputra Valley",culture:"Bihu traditions, Sattriya dance, Assamese music, weaving and Brahmaputra Valley community life."},
+"Bihar":{lang:"Hindi • Maithili • Bhojpuri",fest:"Chhath Puja • Makar Sankranti",food:"Litti Chokha • Thekua • Sattu",region:"Mithila & Magadh",culture:"Madhubani painting, Maithil traditions, Bhojpuri folk culture and Chhath celebrations."},
+"Chhattisgarh":{lang:"Hindi • Chhattisgarhi",fest:"Hareli • Bastar Dussehra",food:"Chila • Fara • Aamat",region:"Bastar",culture:"Adivasi traditions of Bastar, Gaur dance, folk music, crafts and community festivals."},
+"Goa":{lang:"Konkani • Marathi",fest:"Carnival • Shigmo • Sao Joao",food:"Fish Curry Rice • Bebinca • Xacuti",region:"Konkan Coast",culture:"Konkani heritage, Carnival and Shigmo, traditional music, dance and coastal Catholic-Hindu traditions."},
+"Gujarat":{lang:"Gujarati",fest:"Navratri • Uttarayan • Janmashtami",food:"Dhokla • Undhiyu • Thepla",region:"Kutch & Saurashtra",culture:"Garba and Dandiya traditions, Bandhani textiles, handicrafts and vibrant Navratri culture."},
+"Haryana":{lang:"Hindi • Haryanvi",fest:"Teej • Baisakhi • Surajkund Fair",food:"Bajra Khichdi • Bajra Roti • Churma",region:"Haryana Plains",culture:"Haryanvi folk songs, ragini, wrestling traditions, rural fairs and agricultural culture."},
+"Himachal Pradesh":{lang:"Hindi • Pahari languages",fest:"Kullu Dussehra • Losar • Minjar",food:"Dham • Siddu • Madra",region:"Kullu & Lahaul-Spiti",culture:"Pahari folk music and dance, Kullu traditions, wool crafts and Himalayan village culture."},
+"Jharkhand":{lang:"Hindi • Santali • regional languages",fest:"Sarhul • Karma • Sohrai",food:"Dhuska • Rugra • Thekua",region:"Chotanagpur Plateau",culture:"Adivasi traditions including Sohrai and Sarhul, tribal dance, music, painting and forest-based culture."},
+"Karnataka":{lang:"Kannada • Tulu • Konkani",fest:"Mysuru Dasara • Ugadi • Karaga",food:"Bisi Bele Bath • Ragi Mudde • Mysore Pak",region:"Mysuru & Coastal Karnataka",culture:"Yakshagana, Mysuru traditions, classical arts, handicrafts and diverse Kannada folk culture."},
+"Kerala":{lang:"Malayalam",fest:"Onam • Vishu • Thrissur Pooram",food:"Sadya • Appam • Puttu",region:"Malabar & Kerala Coast",culture:"Kathakali, Mohiniyattam, Theyyam, temple traditions and the community celebration of Onam."},
+"Madhya Pradesh":{lang:"Hindi • regional languages",fest:"Khajuraho Dance Festival • Bhagoria",food:"Poha • Bhutte Ka Kees • Dal Bafla",region:"Malwa & Bundelkhand",culture:"Tribal and Bundelkhand/Malwa traditions, Gond art, folk dance and Khajuraho cultural heritage."},
+"Maharashtra":{lang:"Marathi • Hindi",fest:"Ganesh Chaturthi • Gudi Padwa • Dahi Handi",food:"Pav Bhaji • Misal Pav • Puran Poli",region:"Konkan & Vidarbha",culture:"Lavani, Powada, Warkari traditions, Ganeshotsav and diverse Maharashtrian folk culture."},
+"Manipur":{lang:"Meitei • tribal languages",fest:"Yaoshang • Lai Haraoba • Ningol Chakouba",food:"Eromba • Singju • Chak-hao",region:"Imphal Valley",culture:"Manipuri classical dance, Lai Haraoba, traditional music and Meitei and hill-community heritage."},
+"Meghalaya":{lang:"Khasi • Garo • English",fest:"Wangala • Nongkrem Dance • Shad Suk Mynsiem",food:"Jadoh • Dohneiihong • Pukhlein",region:"Khasi Hills & Garo Hills",culture:"Khasi, Garo and Jaintia traditions, Nongkrem and Wangala dances, music and matrilineal community culture."},
+"Mizoram":{lang:"Mizo • English",fest:"Chapchar Kut • Mim Kut • Pawl Kut",food:"Bai • Vawksa Rep • Misa Mach Poora",region:"Mizoram Hills",culture:"Mizo folk dances such as Cheraw, Chapchar Kut traditions, weaving and community life."},
+"Nagaland":{lang:"English • Naga languages",fest:"Hornbill Festival • Moatsu • Sekrenyi",food:"Smoked Pork • Axone • Bamboo Shoot dishes",region:"Naga Hills",culture:"Naga tribal traditions, Hornbill Festival, warrior/folk dances, weaving and village community heritage."},
+"Odisha":{lang:"Odia • regional languages",fest:"Rath Yatra • Raja • Durga Puja",food:"Pakhala Bhata • Dalma • Chhena Poda",region:"Puri & Coastal Odisha",culture:"Odissi dance, Jagannath traditions, Pattachitra art, handloom and coastal folk culture."},
+"Punjab":{lang:"Punjabi",fest:"Baisakhi • Lohri • Hola Mohalla",food:"Makki di Roti • Sarson da Saag • Amritsari Kulcha",region:"Majha & Malwa",culture:"Bhangra and Giddha, Sikh heritage, Punjabi folk music, farming traditions and vibrant fairs."},
+"Rajasthan":{lang:"Hindi • Rajasthani languages",fest:"Gangaur • Teej • Pushkar Fair",food:"Dal Baati Churma • Gatte • Ker Sangri",region:"Marwar & Mewar",culture:"Rajasthani folk music and dance, puppetry, desert crafts, Rajput heritage and colorful fairs."},
+"Sikkim":{lang:"Nepali • Sikkimese • Lepcha",fest:"Losar • Pang Lhabsol • Saga Dawa",food:"Momos • Thukpa • Gundruk",region:"Eastern Himalayas",culture:"Sikkimese, Lepcha and Bhutia Himalayan traditions, monastery culture, mask dances and festivals."},
+"Tamil Nadu":{lang:"Tamil",fest:"Pongal • Tamil New Year • Thaipusam",food:"Pongal • Idli • Chettinad cuisine",region:"Tamil Nadu Coast & Kongu Nadu",culture:"Bharatanatyam, temple traditions, kolam, Carnatic arts and Tamil festival culture."},
+"Telangana":{lang:"Telugu • Urdu",fest:"Bathukamma • Bonalu • Sankranti",food:"Hyderabadi Biryani • Sarva Pindi • Sakinalu",region:"Hyderabad & Deccan Plateau",culture:"Bathukamma, Bonalu, Perini dance, Deccani heritage and Telangana folk traditions."},
+"Tripura":{lang:"Bengali • Kokborok",fest:"Kharchi Puja • Garia Puja • Ker Puja",food:"Mui Borok • Chakhwi • Wahan Mosdeng",region:"Agartala & Tripura Hills",culture:"Kokborok and Bengali traditions, Garia celebrations, tribal dances, bamboo crafts and royal heritage."},
+"Uttar Pradesh":{lang:"Hindi • Awadhi • Braj",fest:"Diwali • Holi • Kumbh Mela",food:"Awadhi Biryani • Kachori • Petha",region:"Awadh & Braj",culture:"Kathak, Braj and Awadhi traditions, Ganga heritage, crafts and major Holi/Diwali celebrations."},
+"Uttarakhand":{lang:"Hindi • Garhwali • Kumaoni",fest:"Harela • Nanda Devi Raj Jat • Phool Dei",food:"Kafuli • Aloo ke Gutke • Bal Mithai",region:"Garhwal & Kumaon",culture:"Garhwali and Kumaoni folk traditions, devotional music, Himalayan fairs and village culture."},
+"West Bengal":{lang:"Bengali",fest:"Durga Puja • Poila Boishakh • Kali Puja",food:"Machher Jhol • Mishti Doi • Rasgulla",region:"Kolkata & Sundarbans",culture:"Durga Puja, Baul music, Bengali literature, terracotta crafts and diverse folk traditions."},
+"Andaman and Nicobar Islands":{lang:"Hindi • English • Bengali • local languages",fest:"Island festivals • local community celebrations",food:"Seafood • Coconut-based dishes",region:"Andaman Islands",culture:"Indigenous island heritage, coastal communities, traditional crafts and maritime culture."},
+"Chandigarh":{lang:"Hindi • Punjabi • English",fest:"Baisakhi • Rose Festival • Lohri",food:"Chole Bhature • Amritsari Kulcha",region:"Chandigarh City",culture:"Punjabi cultural influence, folk music and dance, Lohri/Baisakhi traditions and modern urban heritage."},
+"Dadra and Nagar Haveli and Daman and Diu":{lang:"Gujarati • Hindi • Marathi",fest:"Nariyal Purnima • Navratri • local tribal festivals",food:"Gujarati & coastal seafood cuisine",region:"Daman Coast & Tribal Belt",culture:"Warli and other tribal traditions, coastal Gujarati-Portuguese influences, folk dance and crafts."},
+"Delhi":{lang:"Hindi • Punjabi • Urdu • English",fest:"Diwali • Holi • Eid • Qutub Festival",food:"Chaat • Chole Bhature • Butter Chicken",region:"Old Delhi & NCR",culture:"Mughal-era heritage, Sufi traditions, Punjabi and North Indian culture, crafts and historic foodways."},
+"Jammu and Kashmir":{lang:"Kashmiri • Dogri • Urdu",fest:"Tulip Festival • Herath • Eid celebrations",food:"Rogan Josh • Wazwan • Kahwa",region:"Kashmir Valley & Jammu",culture:"Kashmiri crafts, Sufi traditions, Wazwan culture, folk music and Himalayan heritage."},
+"Ladakh":{lang:"Ladakhi • Hindi • English",fest:"Hemis Festival • Losar • Dosmoche",food:"Thukpa • Momos • Skyu",region:"Leh & High Himalayas",culture:"Tibetan Buddhist traditions, monastery festivals, mask dances, weaving and high-altitude village culture."},
+"Lakshadweep":{lang:"Malayalam • Mahl",fest:"Eid • island community celebrations",food:"Tuna dishes • coconut curries • rice",region:"Coral Islands",culture:"Malayali and island Muslim traditions, boat culture, coconut-based foodways, music and community celebrations."},
+"Puducherry":{lang:"Tamil • French • English",fest:"Pongal • Masi Magam • Fête de Puducherry",food:"Creole cuisine • Dosa • seafood",region:"Puducherry Coast",culture:"Tamil and French colonial heritage, temple traditions, Tamil arts, coastal culture and French-influenced cuisine."}
+};
+let currentRegion=null;
+
+const COUNTRY_REGIONS = {
+"United States":["California","Texas","New York","Florida","Hawaii","Alaska"],
+"Canada":["Ontario","Quebec","British Columbia","Alberta","Nova Scotia"],
+"Australia":["New South Wales","Victoria","Queensland","Western Australia","Tasmania"],
+"Brazil":["Bahia","Amazonas","Rio de Janeiro","São Paulo","Pernambuco"],
+"China":["Beijing","Shanghai","Yunnan","Sichuan","Guangdong"],
+"Japan":["Tokyo","Kyoto","Osaka","Hokkaido","Okinawa"],
+"France":["Île-de-France","Provence-Alpes-Côte d’Azur","Brittany","Normandy","Occitanie"],
+"Germany":["Bavaria","Berlin","North Rhine-Westphalia","Saxony","Hesse"],
+"Italy":["Sicily","Tuscany","Lazio","Veneto","Campania"],
+"Mexico":["Oaxaca","Yucatán","Jalisco","Chiapas","Mexico City"],
+"Spain":["Andalusia","Catalonia","Basque Country","Galicia","Madrid"],
+"United Kingdom":["England","Scotland","Wales","Northern Ireland"],
+"Russia":["Moscow","Saint Petersburg","Siberia","Caucasus","Far East"],
+"South Africa":["Western Cape","KwaZulu-Natal","Gauteng","Limpopo","Eastern Cape"],
+"South Korea":["Seoul","Busan","Jeju","Gyeongsang","Jeolla"],
+"Indonesia":["Bali","Java","Sumatra","Sulawesi","Papua"],
+"Thailand":["Bangkok & Central Thailand","Northern Thailand","Northeastern Thailand","Southern Thailand"],
+"Vietnam":["Hanoi & North","Central Vietnam","Ho Chi Minh City & South","Mekong Delta"],
+"Pakistan":["Punjab","Sindh","Khyber Pakhtunkhwa","Balochistan","Gilgit-Baltistan"],
+"Nepal":["Kathmandu Valley","Terai","Himalayan Region","Gandaki","Karnali"],
+"Bangladesh":["Dhaka","Chattogram","Sylhet","Rajshahi","Khulna"],
+"Sri Lanka":["Western Province","Central Province","Northern Province","Southern Province","Eastern Province"],
+"United Arab Emirates":["Abu Dhabi","Dubai","Sharjah","Ras Al Khaimah","Fujairah"],
+"Saudi Arabia":["Riyadh","Makkah","Madinah","Eastern Province","Asir"],
+"Turkey":["Istanbul & Marmara","Aegean Region","Central Anatolia","Mediterranean Region","Black Sea Region"],
+"Greece":["Athens & Attica","Crete","Macedonia","Peloponnese","Ionian Islands"],
+"Egypt":["Cairo","Alexandria","Luxor","Aswan","Sinai"],
+"Morocco":["Marrakesh-Safi","Fes-Meknes","Casablanca-Settat","Rabat-Salé-Kénitra","Tangier-Tetouan"],
+"Kenya":["Nairobi","Coast","Rift Valley","Western Kenya","Central Kenya"],
+"Nigeria":["Lagos","Abuja","Kano","Rivers State","Oyo"],
+"Argentina":["Buenos Aires","Patagonia","Mendoza","Córdoba","Salta"],
+"Colombia":["Bogotá & Cundinamarca","Antioquia","Caribbean Coast","Pacific Coast","Coffee Region"],
+"Peru":["Lima","Cusco","Arequipa","Amazon","Lake Titicaca Region"],
+"Chile":["Santiago & Central Chile","Atacama","Valparaíso","Lake District","Patagonia"],
+"New Zealand":["Auckland","Wellington","Canterbury","Otago","Bay of Plenty"]
+};
+Object.assign(COUNTRY_REGIONS,{"India":["Andhra Pradesh","Arunachal Pradesh","Assam","Bihar","Chhattisgarh","Goa","Gujarat","Haryana","Himachal Pradesh","Jharkhand","Karnataka","Kerala","Madhya Pradesh","Maharashtra","Manipur","Meghalaya","Mizoram","Nagaland","Odisha","Punjab","Rajasthan","Sikkim","Tamil Nadu","Telangana","Tripura","Uttar Pradesh","Uttarakhand","West Bengal","Delhi","Jammu and Kashmir","Ladakh"],"Afghanistan":["Kabul","Herat","Balkh","Kandahar","Badakhshan"],"Algeria":["Algiers","Oran","Constantine","Tlemcen","Kabylie"],"Argentina":["Buenos Aires","Mendoza","Córdoba","Salta","Patagonia"],"Austria":["Vienna","Salzburg","Tyrol","Styria","Carinthia"],"Bangladesh":["Dhaka","Chattogram","Sylhet","Rajshahi","Khulna"],"Belgium":["Brussels","Flanders","Wallonia","Antwerp","Liège"],"Bolivia":["La Paz","Santa Cruz","Cochabamba","Potosí","Sucre"],"Chile":["Santiago","Valparaíso","Atacama","Araucanía","Patagonia"],"Colombia":["Bogotá","Antioquia","Caribbean Coast","Pacific Coast","Coffee Region"],"Czechia":["Prague","Moravia","Bohemia","South Bohemia","Silesia"],"Denmark":["Copenhagen","Jutland","Zealand","Funen","Bornholm"],"Ethiopia":["Addis Ababa","Amhara","Oromia","Tigray","Sidama"],"Finland":["Helsinki","Lapland","Tampere","Turku","Åland"],"Ghana":["Accra","Ashanti","Northern Region","Volta","Cape Coast"],"Greece":["Athens","Crete","Macedonia","Peloponnese","Cyclades"],"Hungary":["Budapest","Transdanubia","Great Plain","Northern Hungary","Lake Balaton"],"Iran":["Tehran","Isfahan","Shiraz/Fars","Tabriz/East Azerbaijan","Gilan"],"Ireland":["Dublin","Cork","Galway","Kerry","Donegal"],"Israel":["Jerusalem","Tel Aviv","Galilee","Negev","Haifa"],"Kenya":["Nairobi","Coast","Rift Valley","Western Kenya","Central Kenya"],"Malaysia":["Kuala Lumpur","Penang","Malacca","Sarawak","Sabah"],"Morocco":["Marrakesh","Fes","Casablanca","Rabat","Tangier"],"Netherlands":["Amsterdam","Rotterdam","Friesland","Zeeland","Limburg"],"Nigeria":["Lagos","Abuja","Kano","Rivers State","Oyo"],"Norway":["Oslo","Bergen & Fjords","Trøndelag","Northern Norway","Svalbard"],"Peru":["Lima","Cusco","Arequipa","Amazon","Lake Titicaca"],"Poland":["Warsaw","Kraków","Silesia","Masuria","Pomerania"],"Portugal":["Lisbon","Porto","Algarve","Madeira","Azores"],"Romania":["Bucharest","Transylvania","Moldavia","Wallachia","Dobrogea"],"Saudi Arabia":["Riyadh","Makkah","Madinah","Eastern Province","Asir"],"Sweden":["Stockholm","Gothenburg","Skåne","Dalarna","Lapland"],"Switzerland":["Zurich","Geneva","Bern","Ticino","Valais"],"Tanzania":["Dar es Salaam","Zanzibar","Arusha","Dodoma","Mwanza"],"Ukraine":["Kyiv","Lviv","Odesa","Carpathians","Kharkiv"],"Vietnam":["Hanoi & North","Central Vietnam","Ho Chi Minh City & South","Mekong Delta","Da Nang & Hue"],"Zimbabwe":["Harare","Bulawayo","Matabeleland","Manicaland","Victoria Falls"]});
+
+Object.assign(COUNTRY_REGIONS,{"Côte d'Ivoire":["Abidjan","Yamoussoukro","Man","Korhogo","Grand-Bassam"],"Democratic Republic of the Congo":["Kinshasa","Kivu","Katanga","Kasai","Orientale"],"Kyrgyzstan":["Bishkek","Issyk-Kul","Osh","Naryn","Jalal-Abad"],"Uzbekistan":["Tashkent","Samarkand","Bukhara","Khiva/Khorezm","Fergana Valley"]});
+function getRegions(country){
+  if(COUNTRY_REGIONS[country]) return COUNTRY_REGIONS[country];
+  const base=info(country).region;
+  return [base,`Northern ${country}`,`Central ${country}`,`Southern ${country}`,`Eastern ${country}`,`Western ${country}`].filter((v,i,a)=>v && a.indexOf(v)===i).slice(0,6);
+}
+function countryRegionCard(country,region){return `<button class="stateCard" data-action="country-region" data-country="${esc(country)}" data-region="${esc(region)}"><span>📍</span><b>${esc(region)}</b><small>Explore local culture</small></button>`}
+function renderCountryRegions(country){const el=document.getElementById('countryRegionGrid');if(el)el.innerHTML=getRegions(country).map(r=>countryRegionCard(country,r)).join('')}
+const REGION_KNOWLEDGE = {
+ "Assam, India":{lang:"Assamese • Bodo • Bengali and other local languages",fest:"Bihu • Ali-Aye-Ligang • Me-Dam-Me-Phi",food:"Khar • Masor Tenga • Pitha • Xaak",bird:"White-winged Duck",culture:"Rich Assamese traditions shaped by the Brahmaputra Valley, indigenous communities, music, dance and agriculture."},
+ "Kyoto, Japan":{lang:"Japanese",fest:"Gion Matsuri • Aoi Matsuri • Jidai Matsuri",food:"Kaiseki • Yudofu • Kyoto-style sweets",bird:"Japanese bush warbler",culture:"Historic temples, tea culture, traditional arts, seasonal festivals and preserved machiya neighborhoods."},
+ "Tokyo, Japan":{lang:"Japanese",fest:"Sanja Matsuri • Kanda Matsuri • Sumida River Fireworks",food:"Sushi • Monjayaki • Tokyo-style ramen",bird:"Japanese bush warbler",culture:"A modern megacity where contemporary life blends with shrines, festivals, crafts and historic neighborhoods."},
+ "Okinawa, Japan":{lang:"Okinawan languages • Japanese",fest:"Eisa • Shurijo Festival • Naha Hari",food:"Okinawa soba • Goya champuru • Rafute",bird:"Okinawa rail",culture:"Ryukyuan heritage known for distinctive music, dance, cuisine and island traditions."},
+ "Bali, Indonesia":{lang:"Balinese • Indonesian",fest:"Nyepi • Galungan • Kuningan",food:"Babi guling • Lawar • Nasi campur Bali",bird:"Bali myna",culture:"Balinese Hindu traditions, temple ceremonies, dance, gamelan and community-based village life."},
+ "California, United States":{lang:"English • Spanish and many community languages",fest:"Lunar New Year • Día de los Muertos • local cultural festivals",food:"California cuisine • tacos • sourdough • farm-to-table dishes",bird:"California quail",culture:"A highly diverse region shaped by Indigenous, Mexican, Asian, European and Pacific influences."},
+ "Quebec, Canada":{lang:"French • English",fest:"Saint-Jean-Baptiste Day • Quebec Winter Carnival",food:"Poutine • tourtière • maple products",bird:"Snowy owl",culture:"Distinct Francophone culture with strong traditions in music, food, winter celebrations and arts."},
+ "Bavaria, Germany":{lang:"German • Bavarian dialects",fest:"Oktoberfest • Starkbierfest • local Kirchweih",food:"Weisswurst • pretzels • Schweinebraten",bird:"Eurasian eagle-owl",culture:"Alpine and Bavarian traditions expressed through folk dress, music, festivals, crafts and cuisine."}
+};
+function regionKey(region,country){return `${region}, ${country}`}
+function regionData(country,region){
+  const exact=REGION_KNOWLEDGE[regionKey(region,country)];
+  if(exact)return exact;
+  if(country==='India' && INDIA_STATES[region]){const st=INDIA_STATES[region];return {lang:st.lang,fest:st.fest,food:st.food,bird:st.bird||"Regional bird information",culture:st.culture||`${region} has distinctive regional traditions, food, festivals, music and arts.`};}
+  const d=info(country);
+  return {lang:d.language,fest:d.festival,food:d.food,bird:"Regional bird information varies by locality.",culture:`${region} is a regional part of ${country} with local traditions, food, languages, arts and celebrations.`};
+}
+function renderRegionResults(country){
+ const inp=document.getElementById('regionInput'); const grid=document.getElementById('countryRegionGrid'); if(!inp||!grid)return;
+ const q=inp.value.toLowerCase().trim(); const arr=getRegions(country).filter(r=>r.toLowerCase().includes(q));
+ grid.innerHTML=arr.map(r=>countryRegionCard(country,r)).join('')||`<div class="detail"><b>No region found.</b><p>Try another spelling or search term.</p></div>`;
+}
+async function wikipediaKnowledge(subject, topic){
+  const query=`${topic} of ${subject}`;
+  try{
+    const u='https://en.wikipedia.org/w/api.php?action=query&list=search&srsearch='+encodeURIComponent(query)+'&srlimit=1&format=json&origin=*';
+    const r=await fetch(u); const j=await r.json(); const hit=j?.query?.search?.[0];
+    if(!hit)return null;
+    const title=hit.title;
+    const rr=await fetch('https://en.wikipedia.org/api/rest_v1/page/summary/'+encodeURIComponent(title));
+    const jj=await rr.json();
+    if(jj?.extract)return {title,extract:jj.extract};
+  }catch(e){}
+  return null;
+}
+function cultureVideoQuery(subject,country){
+ const d=(country==='India' && INDIA_STATES[subject])?INDIA_STATES[subject]:regionData(country,subject);
+ const fest=(d?.fest||'traditional festival').split('•')[0].trim();
+ const food=(d?.food||'traditional food').split('•')[0].trim();
+ const culture=(d?.culture||'traditional culture').replace(/\s+/g,' ').slice(0,90);
+ return `${subject} ${country} ${fest} ${food} ${culture} traditional culture dance`;
+}
+async function findCommonsCultureVideo(subject,country){
+ const d=(country==='India' && INDIA_STATES[subject])?INDIA_STATES[subject]:regionData(country,subject);
+ const fest=(d?.fest||d?.festival||'traditional festival').split('•')[0].trim();
+ const food=(d?.food||'traditional food').split('•')[0].trim();
+ const culture=(d?.culture||d?.story||'traditional culture').replace(/\s+/g,' ').slice(0,110);
+ const queries=[
+   `${subject} ${country} ${fest} ${food} traditional culture folk dance`,
+   `${subject} ${country} traditional festival folk dance`,
+   `${subject} ${country} traditional culture music dance heritage`
+ ];
+ const allowed=/creative commons attribution|creative commons attribution-sharealike|cc by|cc by-sa|cc0|public domain|pd-old/i;
+ try{
+   const all=[];
+   for(const q0 of queries){
+     const query=encodeURIComponent(q0);
+     const api='https://commons.wikimedia.org/w/api.php?action=query&generator=search&gsrsearch='+query+'&gsrnamespace=6&gsrlimit=40&prop=imageinfo&iiprop=url|mime|extmetadata&format=json&origin=*';
+     const r=await fetch(api); const j=await r.json();
+     all.push(...Object.values(j?.query?.pages||{}));
+   }
+   const seen=new Set();
+   const pages=all.filter(x=>{if(seen.has(x.pageid))return false;seen.add(x.pageid);return true;});
+   const words=subject.toLowerCase().split(/\s+/).filter(x=>x.length>2);
+   const candidates=pages.filter(x=>{
+      const ii=x?.imageinfo?.[0];
+      const mime=ii?.mime||'';
+      const meta=ii?.extmetadata||{};
+      const license=[meta.LicenseShortName?.value||'',meta.License?.value||'',meta.UsageTerms?.value||''].join(' ');
+      return mime.startsWith('video/') && allowed.test(license);
+   });
+   const score=t=>{
+      const title=(t.title||'').toLowerCase();
+      const meta=t.imageinfo?.[0]?.extmetadata||{};
+      const text=[title,meta.ImageDescription?.value||''].join(' ').toLowerCase();
+      return words.reduce((n,w)=>n+(text.includes(w)?3:0),0)+(text.includes('traditional')?2:0)+(text.includes('dance')?2:0)+(text.includes('festival')?2:0);
+   };
+   candidates.sort((a,b)=>score(b)-score(a));
+   const hit=candidates[0];
+   if(hit?.imageinfo?.[0]?.url){
+     const ii=hit.imageinfo[0], m=ii.extmetadata||{};
+     return {url:ii.url,title:hit.title||'',author:(m.Artist?.value||'Unknown author').replace(/<[^>]+>/g,''),license:(m.LicenseShortName?.value||m.License?.value||'Open license').replace(/<[^>]+>/g,''),source:'Wikimedia Commons'};
+   }
+ }catch(e){}
+ return null;
+}
+function youtubeCultureQuery(subject,country,topic='culture'){
+ const d=(country==='India' && INDIA_STATES[subject])?INDIA_STATES[subject]:regionData(country,subject);
+ const festival=(d?.fest||'').split('•')[0].trim();
+ const food=(d?.food||'').split('•')[0].trim();
+ if(topic==='food') return `${subject} ${country} traditional food ${food} cuisine`;
+ if(topic==='festival') return `${subject} ${country} traditional festival ${festival} celebration`;
+ return `${subject} ${country} traditional culture ${festival} ${food} dance music heritage`;
+}
+function setRegionalVideo(subject,country){
+ const box=document.querySelector('.videoBox'); if(!box)return;
+ const exact=(typeof TOPIC_VIDEOS!=='undefined' && TOPIC_VIDEOS[subject]) ? {url:TOPIC_VIDEOS[subject],title:subject+' cultural video',author:'Wikimedia Commons contributor',license:'See Wikimedia Commons file page',source:'Wikimedia Commons'} : null;
+ box.innerHTML=`<div class="videoTitle"><div><div class="kicker">EXACT REGIONAL CULTURAL STORY</div><h2>▶ ${esc(subject)} • ${esc(country)}</h2></div></div><div class="videoPlaceholder"><div>🎬</div><b>${exact?'Loading verified '+esc(subject)+' cultural video…':'Finding an open-license '+esc(subject)+' tradition video…'}</b><p>Only media matching this exact state/region and an open license will be shown.</p></div>`;
+ const finder=exact ? Promise.resolve(exact) : findCommonsCultureVideo(subject,country);
+ finder.then(info=>{
+   if(!box.isConnected)return;
+   if(info?.url){box.innerHTML=`<div class="videoTitle"><div><div class="kicker">EXACT REGIONAL CULTURAL STORY</div><h2>▶ ${esc(subject)} • ${esc(country)}</h2></div><button class="secondary" data-action="play-video">▶ Play</button></div><video id="cultureVideo" controls playsinline preload="metadata"><source src="${esc(info.url)}"></video><div class="videoMeta"><span>● EXACT REGION MATCH</span><span>${esc(info.source)} • ${esc(info.license)} • ${esc(info.author)}</span></div>`;}
+   else{box.innerHTML=`<div class="videoTitle"><div><div class="kicker">EXACT REGIONAL CULTURAL STORY</div><h2>▶ ${esc(subject)} • ${esc(country)}</h2></div></div><div class="videoPlaceholder"><div>🎬</div><b>No verified open-license video found</b><p>No unrelated video will be shown. You can use “Discover more” to find additional open-license videos inside the app.</p><button class="secondary" data-action="region-video">🔎 Find exact ${esc(subject)} videos</button></div>`;}
+ });
+}
+async function selectCountryRegion(country,region){
+ currentCountry=country; currentRegion=region; const d=regionData(country,region); const el=document.getElementById('countryRegionDetail'); if(!el)return;
+ el.innerHTML=`<div class="stateHero"><div><span class="badge">🌍 ${esc(country)} • REGION</span><h2>${esc(region)}</h2><p>${esc(d.culture)}</p></div><button class="primary" data-action="region-ai">✨ Ask AI</button></div><div class="facts stateFacts"><div class="fact"><b>🗣 Language</b>${esc(d.lang)}</div><div class="fact"><b>🎉 Festivals</b>${esc(d.fest)}</div><div class="fact"><b>🍽 Food</b>${esc(d.food)}</div><div class="fact"><b>🐦 Regional bird</b>${esc(d.bird)}</div></div><div class="detail"><h3>🎬 Cultural Story</h3><p>Explore the local food, festivals, language and heritage of ${esc(region)}.</p><div class="buttons"><button class="primary" data-action="region-video">▶ Watch ${esc(region)} culture</button><button class="secondary" data-action="youtube">🔎 Discover more</button></div></div>`;
+ setRegionalVideo(region,country);
+ el.scrollIntoView({behavior:'smooth',block:'center'});
+}
+function stateCard(name,d){return `<button class="stateCard" data-action="state" data-state="${esc(name)}"><span>📍</span><b>${esc(name)}</b><small>${esc(d.lang)}</small></button>`}
+function renderIndiaStates(){const el=document.getElementById('stateGrid');if(el){const q=(document.getElementById('stateInput')?.value||'').toLowerCase().trim();el.innerHTML=Object.entries(INDIA_STATES).filter(([n])=>n.toLowerCase().includes(q)).map(([n,d])=>stateCard(n,d)).join('')||'<div class=detail>No state/UT found.</div>';}}
+function selectIndiaState(name){currentCountry='India';currentRegion=name;const d=INDIA_STATES[name];if(!d)return;
+ const bl=document.getElementById('baseLanguage'),bf=document.getElementById('baseFestival'),bfood=document.getElementById('baseFood'),br=document.getElementById('baseRegion');
+ if(bl)bl.textContent=d.lang||''; if(bf)bf.textContent=d.fest||''; if(bfood)bfood.textContent=d.food||''; if(br)br.textContent=d.region||'';
+ const cai=document.getElementById('countryAI'); if(cai)cai.innerHTML=`<h3>🤖 Cultural AI Insight — ${esc(name)}</h3><p>${esc(d.culture||`${name} has its own distinctive language, festivals, food traditions, arts and heritage.`)}</p><button class="secondary" data-action="state-ai">Ask: What makes ${esc(name)} unique?</button>`;
+ const el=document.getElementById('stateDetail');if(!el)return;el.innerHTML=`<div class="stateHero"><div><span class="badge">🇮🇳 INDIA • STATE</span><h2>${esc(name)}</h2><p>${esc(d.culture||`${name} has its own language, festivals, food traditions and regional identity.`)}</p></div><button class="primary" data-action="state-ai">✨ Ask AI about ${esc(name)}</button></div><div class="facts stateFacts"><div class="fact"><b>🗣 Language</b>${esc(d.lang)}</div><div class="fact"><b>🎉 Festivals</b>${esc(d.fest)}</div><div class="fact"><b>🍽 Food</b>${esc(d.food)}</div><div class="fact"><b>🗺 Region</b>${esc(d.region)}</div></div><div class="detail"><h3>🎬 Cultural Story</h3><p>Explore ${esc(d.fest)} and discover ${esc(d.food)} from ${esc(name)}.</p><div class="buttons"><button class="primary" data-action="state-video">▶ Watch ${esc(name)} culture video</button><button class="secondary" data-action="youtube">🔎 Discover more</button></div></div>`;setRegionalVideo(name,'India');el.scrollIntoView({behavior:'smooth',block:'center'})}
+
+const TOPIC_VIDEOS={
+"India":"https://upload.wikimedia.org/wikipedia/commons/e/e3/Bihu_world_record.webm",
+"Assam":"https://upload.wikimedia.org/wikipedia/commons/e/e3/Bihu_world_record.webm",
+"Japan":"https://upload.wikimedia.org/wikipedia/commons/3/31/Traditional_Shinto_Wedding_Procession_and_Ceremony.webm",
+"China":"https://upload.wikimedia.org/wikipedia/commons/1/18/Traditional_chinese_dance_in_Gubei.webm",
+"France":"https://upload.wikimedia.org/wikipedia/commons/2/23/Parapara_dance_2009_France.webm",
+"Mexico":"https://upload.wikimedia.org/wikipedia/commons/f/f2/Chinelos_en_la_Bas%C3%ADlica_de_Guadalupe.webm",
+"South Korea":"https://upload.wikimedia.org/wikipedia/commons/c/cd/Korean_Traditional_Music_%28Part_Five%29.webm",
+"South Africa":"https://upload.wikimedia.org/wikipedia/commons/0/0d/Traditional_dance_in_South_Africa.webm",
+"Italy":"https://upload.wikimedia.org/wikipedia/commons/7/7c/Italienischer_Bauerntanz_%281895%29.webm"
+};
+
+const FALLBACK={flag:"🌐",language:"Local languages",festival:"National & regional festivals",food:"Traditional local cuisine",region:"Regional heritage",video:"",story:"This country has unique cultural traditions expressed through language, food, festivals, music, arts and regional heritage."};
+let favorites=JSON.parse(localStorage.getItem("cawtvFav")||"[]"), currentCountry="India";
+const info=n=>DATA[n]||FALLBACK;
+const esc=x=>String(x).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+
+function card(n){const d=info(n);return `<div class="card"><button data-action="country" data-country="${esc(n)}"><div class="flag">${d.flag}</div><h3>${esc(n)}</h3><div class="muted">${esc(d.language)}</div><p class="muted">${esc(d.festival)}</p></button></div>`}
+
+function show(page){
+ document.querySelectorAll(".view").forEach(x=>x.classList.remove("active"));
+ const el=document.getElementById(page);if(!el)return;el.classList.add("active");
+ document.querySelectorAll("#nav button").forEach(x=>x.classList.toggle("active",x.dataset.page===page));
+ const main=document.querySelector("main");
+ if(main)main.scrollTo({top:0,left:0,behavior:"instant"});
+ window.scrollTo(0,0);
+ document.querySelectorAll(".tv-focus").forEach(x=>x.classList.remove("tv-focus"));
+ if(page==="explore")renderCountries();if(page==="favorites")renderFavorites();
+}
+
+function renderFeatured(){document.getElementById("featured").innerHTML=["India","Japan","China","Mexico","France","South Korea","Brazil","Egypt"].map(card).join("")}
+function renderHomeCountries(){document.getElementById("homeCountries").innerHTML=COUNTRIES.map(card).join("")}
+function renderCountries(){const q=document.getElementById("countryInput").value.toLowerCase().trim();document.getElementById("countries").innerHTML=COUNTRIES.filter(n=>n.toLowerCase().includes(q)).map(card).join("")}
+function openCountry(n){
+ currentCountry=n; currentRegion=null; const d=info(n);
+ const src=d.video||TOPIC_VIDEOS[n]||"";
+ const video=src?`<video id="cultureVideo" controls playsinline preload="metadata" poster=""><source src="${src}" type="${/\.mp4(\?|$)/i.test(src)?"video/mp4":"video/webm"}"></video><div class="videoMeta"><span>● LIVE CULTURAL STORY</span><span>Open-licensed media • Wikimedia Commons</span></div>`:`<div class="videoPlaceholder"><div>🎬</div><b>Searching for an open-license cultural video for ${esc(n)}.</b><p>Only a country-matched open-license video will be shown; unrelated videos are never substituted.</p></div>`;
+ document.getElementById("countryContent").innerHTML=`
+ <div class="countryHead"><div><div class="flag">${d.flag}</div><h1>${esc(n)}</h1><p class="muted">${esc(d.story)}</p><div class="badges"><span class="badge">🌍 Culture</span><span class="badge">🤖 AI Guide</span><span class="badge">🎬 Video</span></div></div>
+ <button class="secondary" data-action="favorite" data-country="${esc(n)}">${favorites.includes(n)?"★ Saved":"☆ Save to Favorites"}</button></div>
+ ${n==='India'?`<div class="stateExplorer"><h2>🇮🇳 Explore India by State / UT</h2><p>Select any state or Union Territory. Then Festivals, Food, Language, Region and AI will update for that state.</p><div class="searchbar"><input id="stateInput" placeholder="🔎 Search state / UT..." autocomplete="off"><button class="secondary" data-action="clear-state">Clear</button></div><div id="stateGrid" class="stateGrid"></div><div id="stateDetail" class="detail"><h3>📍 Choose a State / UT</h3><p>Start with Assam, Maharashtra, Kerala, Tamil Nadu or any other Indian state.</p></div></div>`:`<div class="stateExplorer"><h2>🌍 Explore ${esc(n)} by Region / State / Province</h2><p>Select a local region to continue. Festivals, Food, Language, Heritage and AI update for your selection.</p><div class="searchbar"><input id="regionInput" placeholder="🔎 Search region / state / province..." autocomplete="off"><button class="secondary" data-action="clear-region">Clear</button></div><div id="countryRegionGrid" class="stateGrid"></div><div id="countryRegionDetail" class="detail"><h3>📍 Choose a Region</h3><p>Select any region above to explore local culture.</p></div></div>`}
+ <div class="facts" id="countryBaseFacts">
+ <div class="fact"><button data-action="topic" data-topic="language"><b>🗣 Language</b><span id="baseLanguage">${esc(d.language)}</span></button></div>
+ <div class="fact"><button data-action="topic" data-topic="festival"><b>🎉 Festivals</b><span id="baseFestival">${esc(d.festival)}</span></button></div>
+ <div class="fact"><button data-action="topic" data-topic="food"><b>🍽 Food</b><span id="baseFood">${esc(d.food)}</span></button></div>
+ <div class="fact"><button data-action="topic" data-topic="region"><b>🗺 Featured region</b><span id="baseRegion">${esc(d.region)}</span></button></div>
+ </div>
+ <div id="topicDetail" class="detail"><h3>Choose a topic</h3><p>Select any topic. Cultural AI connects the topic to a story and video when available.</p></div>
+ <div class="buttons">
+ <button class="primary" data-action="culture-ai">✨ Ask Cultural AI</button>
+ <button class="topic" data-action="youtube">▶ Find more videos</button>
+ </div>
+ <div id="countryAI" class="detail"><h3>🤖 Cultural AI Insight</h3><p>${esc(d.story)}</p><button class="secondary" data-action="country-ai">Ask: What makes ${esc(n)} unique?</button></div>
+ <div class="videoBox"><div class="videoTitle"><div><div class="kicker">CULTURAL STORY</div><h2>▶ Watch ${esc(n)}</h2></div><button class="secondary" data-action="play-video">▶ Play</button></div>${video}</div>`;
+ show("country");
+ if(!src){ const box=document.querySelector("#countryContent .videoBox"); if(box){ findCommonsCultureVideo(n,n).then(info=>{ if(!box.isConnected)return; if(info?.url){ box.innerHTML=`<div class="videoTitle"><div><div class="kicker">COUNTRY CULTURAL STORY</div><h2>▶ ${esc(n)}</h2></div><button class="secondary" data-action="play-video">▶ Play</button></div><video id="cultureVideo" controls playsinline preload="metadata"><source src="${esc(info.url)}"></video><div class="videoMeta"><span>● COUNTRY MATCH</span><span>${esc(info.source)} • ${esc(info.license)} • ${esc(info.author)}</span></div>`; } }); } }
+ if(n==='India') renderIndiaStates(); else { renderCountryRegions(n); setTimeout(()=>renderRegionResults(n),0); }
+}
+function showTopic(topic){
+ const d=(currentCountry==='India' && currentRegion && INDIA_STATES[currentRegion])?INDIA_STATES[currentRegion]:info(currentCountry),el=document.getElementById("topicDetail");
+ const title={language:"🗣 Language & identity",festival:"🎉 Festivals & celebrations",food:"🍽 Food culture",region:"🗺 Regional culture"}[topic];
+ const text={
+ language:`In ${currentCountry}, ${d.language} connects everyday life, stories, music and identity.`,
+ festival:`Explore ${d.festival}. These celebrations bring communities together through art, food, music and tradition.`,
+ food:`Food traditions include ${d.food}. Cuisine can reveal local history, geography and community life.`,
+ region:`${d.region} is a starting point for discovering regional traditions, food, music and cultural stories.`}[topic];
+ const has=!!(d.video||TOPIC_VIDEOS[currentCountry]||(currentCountry==='India'&&currentRegion&&TOPIC_VIDEOS[currentRegion]));
+ el.innerHTML=`<h3>${title}</h3><p>${text}</p><div class="buttons">${has?'<button class="primary" data-action="topic-video" data-topic="'+topic+'">▶ Watch this cultural story</button>':''}<button class="secondary" data-action="youtube">🔎 Discover more ${topic} videos</button></div>`;
+ el.scrollIntoView({behavior:"smooth",block:"center"});
+}
+function saveFavorite(n){favorites=favorites.includes(n)?favorites.filter(x=>x!==n):[...favorites,n];localStorage.setItem("cawtvFav",JSON.stringify(favorites));openCountry(n);toast(favorites.includes(n)?"Saved to Favorites":"Removed from Favorites")}
+function renderFavorites(){document.getElementById("favoritesGrid").innerHTML=favorites.length?favorites.map(card).join(""):`<div class="detail"><h3>No favorites yet</h3><p>Open a country and press Save to Favorites.</p></div>`}
+function openSearch(){
+  document.getElementById("searchModal").classList.add("open");
+  document.getElementById("mainInput").value="";
+  document.getElementById("results").innerHTML=`<div class="detail"><h3>🔎 Search Cultural AI World TV</h3><p>Type a country, state, festival, food, language or cultural topic. Then press <b>↓</b> to move to the results.</p></div>`;
+  setTimeout(()=>document.getElementById("mainInput").focus(),50);
+}
+function closeSearch(){document.getElementById("searchModal").classList.remove("open")}
+function renderAISuggestions(raw){
+  const box=document.getElementById("aiSuggestions"); if(!box)return;
+  const q=(raw||"").trim().toLowerCase();
+  if(!q){box.innerHTML="";box.style.display="none";return;}
+
+  const pool=[
+    ["Nagaland culture","Tell me about Nagaland culture"],
+    ["Nagaland traditions","Tell me about Naga traditions and heritage"],
+    ["Nagaland traditional food","What is traditional food of Nagaland?"],
+    ["Nepal culture","Tell me about Nepalese culture"],
+    ["North Indian culture","Tell me about North Indian culture"],
+    ["Assam Bihu","Why is Bihu important in Assam?"],
+    ["India festivals","What are important festivals in India?"],
+    ["Japan culture","Tell me about Japanese culture"],
+    ["Korean traditional music","Tell me about Korean traditional music"],
+    ["Mexico traditional food","What is traditional food of Mexico?"],
+    ["Naga festival","Tell me about Naga festivals"],
+    ["Indian regional culture","Tell me about India's regional cultures"]
+  ];
+  // TV-friendly live suggestions: typing even one letter (for example P)
+  // produces meaningful country/state suggestions instead of unrelated text.
+  const names=[...COUNTRIES];
+  if(typeof INDIA_STATES!=="undefined") names.push(...Object.keys(INDIA_STATES).map(x=>x+" (India)"));
+  names.forEach(name=>{
+    const clean=name.replace(/ \(India\)$/,'');
+    pool.push([clean+" culture",`Tell me about ${clean} culture`]);
+    pool.push([clean+" traditions",`What are the traditional festivals, food and heritage of ${clean}?`]);
+  });
+
+  // Prefix/word matching first, then normal substring matching.
+  const words=q.split(/\s+/).filter(Boolean);
+  const score = item => {
+    const text=(item[0]+" "+item[1]).toLowerCase();
+    let s=0;
+    if(item[0].toLowerCase().startsWith(q)) s+=100;
+    if(item[1].toLowerCase().startsWith(q)) s+=80;
+    for(const w of words){
+      if(item[0].toLowerCase().split(/\s+/).some(x=>x.startsWith(w))) s+=20;
+      if(text.includes(w)) s+=5;
+    }
+    return s;
+  };
+  const hits=pool
+    .map(x=>({x,s:score(x)}))
+    .filter(x=>x.s>0)
+    .sort((a,b)=>b.s-a.s)
+    .slice(0,6)
+    .map(x=>x.x);
+
+  if(!hits.length){
+    box.innerHTML=`<div class="aiSuggestion">🤖 No suggestion found. Press Enter or Ask AI to ask your own question.</div>`;
+    box.style.display="block";return;
+  }
+
+  box.innerHTML=hits.map((x,i)=>
+    `<button class="aiSuggestion" data-action="ai-suggestion" data-question="${esc(x[1])}">
+      🤖 <b>${esc(x[0])}</b><small style="display:block;color:var(--muted);margin-top:4px">${esc(x[1])}</small>
+    </button>`
+  ).join("");
+  box.style.display="block";
+}
+function renderSearchSuggestions(raw){
+  const box=document.getElementById("searchSuggestions"); if(!box)return;
+  const q=(raw||"").trim().toLowerCase();
+  if(!q){box.innerHTML="";box.style.display="none";return;}
+  const items=[];
+  COUNTRIES.forEach(n=>{if(n.toLowerCase().startsWith(q)||n.toLowerCase().includes(q))items.push({label:n,sub:"Country",country:n});});
+  if(typeof INDIA_STATES!=="undefined") Object.keys(INDIA_STATES).forEach(st=>{if(st.toLowerCase().startsWith(q)||st.toLowerCase().includes(q))items.push({label:st,sub:"India • State / UT",country:"India",state:st});});
+  const unique=[]; const seen=new Set();
+  for(const x of items){const k=x.label+"|"+x.sub;if(!seen.has(k)){seen.add(k);unique.push(x)}}
+  const hits=unique.slice(0,8);
+  if(!hits.length){box.innerHTML=`<div class="searchSuggestion">🔎 No matching culture found for “${esc(raw)}”</div>`;box.style.display="block";return;}
+  box.innerHTML=hits.map(x=>`<button class="searchSuggestion" data-action="search-suggestion" data-country="${esc(x.country)}" data-state="${esc(x.state||"")}">🌍 <b>${esc(x.label)}</b><small> • ${esc(x.sub)}</small></button>`).join("");
+  box.style.display="block";
+}
+function searchAll(){
+  const input=document.getElementById("mainInput");
+  const box=document.getElementById("results");
+  const raw=input.value.trim();
+  const q=raw.toLowerCase();
+  renderSearchSuggestions(raw);
+  if(!q){box.innerHTML=`<div class="detail"><h3>🔎 Search Cultural AI World TV</h3><p>Type a country, state, festival, food, language or cultural topic. Results will appear here as you type.</p></div>`;return}
+  const rows=[];
+  COUNTRIES.forEach(n=>{
+    const d=info(n);
+    const fields=[n,d.language,d.festival,d.food,d.region,d.story].filter(Boolean);
+    if(fields.join(" ").toLowerCase().includes(q)) rows.push({n,d});
+  });
+  const seen=new Set();
+  const hits=rows.filter(x=>{if(seen.has(x.n))return false;seen.add(x.n);return true}).slice(0,24);
+  if(!hits.length){
+    box.innerHTML=`<div class="detail"><h3>🔎 No matching culture found</h3><p>No result matches <b>“${esc(raw)}”</b>.</p><p>Try a country, state, festival, food, language or cultural keyword.</p><button class="secondary" data-action="close-search">Close</button></div>`;
+    return;
+  }
+  box.innerHTML=`<div class="detail"><h3>🔎 Results for “${esc(raw)}”</h3><p class="muted">Select any result to open its cultural journey.</p><div class="searchResults">${hits.map(({n,d})=>`<button class="result" data-action="country" data-country="${esc(n)}"><div class="flag">${d.flag}</div><div><b>${esc(n)}</b><p class="muted">${esc(d.festival||"")} • ${esc(d.food||"")}</p><small>${esc(d.language||"")} • ${esc(d.region||"")}</small></div></button>`).join("")}</div></div>`;
+}
+async function runAI(){
+  const input=document.getElementById("aiInput");
+  const qraw=input.value.trim();
+  const q=qraw.toLowerCase();
+  const box=document.getElementById("aiAnswer");
+  if(!q){
+    box.innerHTML='<b>AI Cultural Guide:</b> Ask about a country, food, festival, language, region or tradition.';
+    return;
+  }
+
+  // Local intent detection keeps the TV demo useful even when the real AI backend
+  // is not connected yet. When /api/ask-ai exists, its structured recommendation
+  // is used first.
+  let targetCountry = currentCountry || "India";
+  const countryMatch = COUNTRIES.slice().sort((a,b)=>b.length-a.length)
+    .find(c=>q.includes(c.toLowerCase()));
+  if(countryMatch) targetCountry=countryMatch;
+
+  let targetRegion="";
+  const stateMatch=Object.keys(INDIA_STATES).slice().sort((a,b)=>b.length-a.length)
+    .find(st=>q.includes(st.toLowerCase()));
+  if(stateMatch){targetCountry="India";targetRegion=stateMatch;}
+
+  const regions=getRegions(targetCountry)||[];
+  const foundRegion=regions.slice().sort((a,b)=>b.length-a.length)
+    .find(r=>q.includes(r.toLowerCase()));
+  if(foundRegion) targetRegion=foundRegion;
+
+  let topic="culture";
+  if(/traditional food|food|cuisine|dish|eat|meal|cook|cooking|recipe/.test(q)) topic="food";
+  else if(/festival|festivals|celebrat|holiday|new year|fair/.test(q)) topic="festival";
+  else if(/language|speak|spoken|dialect|official language/.test(q)) topic="language";
+  else if(/bird/.test(q)) topic="bird";
+  else if(/culture|traditional|tradition|heritage|custom|history/.test(q)) topic="culture";
+
+  const subject=targetRegion||targetCountry;
+  currentCountry=targetCountry;
+  if(targetRegion) currentRegion=targetRegion;
+
+  box.innerHTML='<b>🤖 Cultural AI:</b> Understanding your request and finding a matching cultural story…';
+
+  // Real Gemini bridge. The API key stays server-side in Vercel; never put it in this HTML.
+  try{
+    const r=await fetch("/api/ask-ai",{
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({
+        question:qraw,
+        country:targetCountry,
+        region:targetRegion,
+        topic:topic,
+        requestVideo:true
+      })
+    });
+    if(r.ok){
+      const ai=await r.json();
+      const answer=ai.answer||ai.text||"";
+      const aiCountry=ai.country||targetCountry;
+      const aiRegion=ai.region||targetRegion;
+      const aiTopic=ai.topic||topic;
+      const videoQuery=ai.videoQuery||`${aiCountry} ${aiRegion||""} ${aiTopic} traditional culture`.trim();
+      currentCountry=aiCountry;
+      if(aiRegion) currentRegion=aiRegion;
+      box.innerHTML=`<b>🤖 Cultural AI:</b> ${esc(answer||`Here is a ${aiTopic} story from ${aiCountry}.`)}
+        <div class="badges">
+          <span class="badge">📍 ${esc(aiRegion?aiRegion+", "+aiCountry:aiCountry)}</span>
+          <span class="badge">🔎 ${esc(aiTopic)}</span>
+          <span class="badge">🎬 AI video recommendation</span>
+        </div>
+        <div class="buttons">
+          <button class="primary" data-action="ai-recommended-video" data-video-query="${esc(videoQuery)}">▶ Watch AI Recommended Video</button>
+          <button class="secondary" data-action="country" data-country="${esc(aiCountry)}">Open ${esc(aiCountry)} ▶</button>
+        </div>`;
+      return;
+    }
+  }catch(_){ /* backend not deployed yet — continue with local demo mode */ }
+
+  // Demo-safe fallback: topic-specific search terms, so FOOD → food video,
+  // FESTIVAL → festival video, etc. No unrelated generic video is substituted.
+  const videoQuery=`${subject} ${topic} cultural video`;
+  let answer="";
+  try{
+    const wk=await wikipediaKnowledge(subject,topic);
+    if(wk) answer=wk.extract;
+  }catch(_){}
+  if(!answer){
+    const d=(targetCountry==="India"&&targetRegion&&INDIA_STATES[targetRegion])
+      ? INDIA_STATES[targetRegion]
+      : (targetRegion?regionData(targetCountry,targetRegion):info(targetCountry));
+    if(topic==="food") answer=d?.food||`${subject} has distinctive regional food traditions.`;
+    else if(topic==="festival") answer=d?.fest||`${subject} has a rich calendar of cultural festivals and celebrations.`;
+    else if(topic==="language") answer=d?.lang||`${subject} has diverse language traditions.`;
+    else answer=d?.culture||d?.story||`Explore the cultural traditions of ${subject}.`;
+  }
+
+  box.innerHTML=`<b>🤖 Cultural AI Guide:</b> ${esc(answer)}
+    <div class="badges">
+      <span class="badge">📍 ${esc(targetRegion?targetRegion+", "+targetCountry:targetCountry)}</span>
+      <span class="badge">🔎 ${esc(topic)}</span>
+      <span class="badge">🎬 Topic-matched video</span>
+    </div>
+    <div class="buttons">
+      <button class="primary" data-action="ai-recommended-video" data-video-query="${esc(videoQuery)}">▶ Find & Watch ${esc(topic)} Video</button>
+      <button class="secondary" data-action="country" data-country="${esc(targetCountry)}">Open ${esc(targetCountry)} ▶</button>
+    </div>`;
+}
+
+async function findAndPlayAIRecommendedVideo(query){
+  const modal=document.getElementById("searchModal");
+  const results=document.getElementById("results");
+  if(!modal||!results)return;
+  modal.classList.add("open");
+  results.innerHTML=`<div class="detail"><h3>🤖🎬 AI Video Recommendation</h3><p>Searching open-license cultural videos for:</p><p><b>${esc(query)}</b></p></div>`;
+  try{
+    const api='https://commons.wikimedia.org/w/api.php?action=query&generator=search&gsrsearch='+encodeURIComponent(query)+'&gsrnamespace=6&gsrlimit=30&prop=imageinfo&iiprop=url|mime|extmetadata&format=json&origin=*';
+    const r=await fetch(api); const j=await r.json();
+    const allowed=/creative commons attribution|creative commons attribution-sharealike|cc by|cc by-sa|cc0|public domain|pd-old/i;
+    const videos=Object.values(j?.query?.pages||{}).map(x=>{
+      const ii=x?.imageinfo?.[0],m=ii?.extmetadata||{};
+      const lic=(m.LicenseShortName?.value||m.License?.value||m.UsageTerms?.value||"");
+      return {url:ii?.url||"",mime:ii?.mime||"",title:x.title||"",license:lic.replace(/<[^>]+>/g,""),author:(m.Artist?.value||"Unknown author").replace(/<[^>]+>/g,"")};
+    }).filter(v=>v.url&&v.mime.startsWith("video/")&&allowed.test(v.license)).slice(0,5);
+
+    if(!videos.length){
+      results.innerHTML=`<div class="detail"><h3>🎬 No matching open-license video found</h3><p>Try another country or topic.</p><button class="secondary" data-action="close-search">Close</button></div>`;
+      return;
+    }
+    const v=videos[0];
+    const ext=(v.mime||"").toLowerCase().includes("mp4")||/\.mp4(\?|$)/i.test(v.url)?"mp4":"webm";
+    results.innerHTML=`<div class="detail"><h3>▶ AI Recommended Cultural Video</h3><p>${esc(v.title.replace(/^File:/,""))}</p><small>${esc(v.license)} • ${esc(v.author)}</small><div class="buttons"><button class="primary" data-action="ai-play-selected" data-video-url="${esc(v.url)}" data-mime="${ext}">▶ Play Video</button><button class="secondary" data-action="close-search">Close</button></div></div>`;
+  }catch(e){
+    results.innerHTML=`<div class="detail"><h3>⚠️ Video search unavailable</h3><p>Check the Internet connection.</p><button class="secondary" data-action="close-search">Close</button></div>`;
+  }
+}
+
+function playAISelectedVideo(url,mime){
+  closeSearch();
+  const country=currentCountry||"India";
+  show("country");
+  setTimeout(()=>{
+    const d=info(country);
+    const cc=document.getElementById("countryContent");
+    const v=document.createElement("video");
+    v.id="cultureVideo"; v.controls=true; v.playsInline=true; v.preload="metadata";
+    v.style.width="100%"; v.style.maxHeight="62vh"; v.style.borderRadius="18px";
+    const source=document.createElement("source"); source.src=url; source.type=mime==="mp4"?"video/mp4":"video/webm";
+    v.appendChild(source);
+    const old=cc.querySelector("#cultureVideo");
+    if(old) old.replaceWith(v);
+    else {
+      const wrap=cc.querySelector(".countryHead");
+      if(wrap) wrap.insertAdjacentElement("afterend",v);
+    }
+    v.muted=true;
+    v.play().catch(()=>toast("Press ▶ on the video to start playback."));
+    v.scrollIntoView({behavior:"smooth",block:"center"});
+  },250);
+}
+
+function toast(m){const t=document.getElementById("toast");t.textContent=m;t.style.display="block";clearTimeout(window.__toast);window.__toast=setTimeout(()=>t.style.display="none",1800)}
+async function youtube(q){
+ const modal=document.getElementById("searchModal");
+ if(!modal)return;
+ modal.classList.add("open");
+ document.getElementById("mainInput").value=q;
+ document.getElementById("results").innerHTML=`<div class="detail"><h3>▶ Discover more videos</h3><p>Finding additional open-license cultural videos inside Cultural AI World TV…</p><p><b>${esc(q)}</b></p></div>`;
+ try{
+   const api='https://commons.wikimedia.org/w/api.php?action=query&generator=search&gsrsearch='+encodeURIComponent(q)+'&gsrnamespace=6&gsrlimit=30&prop=imageinfo&iiprop=url|mime|extmetadata&format=json&origin=*';
+   const r=await fetch(api); const j=await r.json();
+   const allowed=/creative commons attribution|creative commons attribution-sharealike|cc by|cc by-sa|cc0|public domain|pd-old/i;
+   const videos=Object.values(j?.query?.pages||{}).map(x=>{
+     const ii=x?.imageinfo?.[0], m=ii?.extmetadata||{};
+     const lic=(m.LicenseShortName?.value||m.License?.value||m.UsageTerms?.value||'');
+     return {id:x.pageid,url:ii?.url,title:x.title||'',author:(m.Artist?.value||'Unknown author').replace(/<[^>]+>/g,''),license:lic.replace(/<[^>]+>/g,''),mime:ii?.mime||''};
+   }).filter(x=>x.url&&x.mime.startsWith('video/')&&allowed.test(x.license)).slice(0,6);
+   if(!videos.length){
+     document.getElementById("results").innerHTML=`<div class="detail"><h3>✨ Cultural story ready</h3><p>No open-license video is available for this topic right now, so the app keeps the cultural story and AI insight available without showing unrelated media.</p><button class="secondary" data-action="close-search">Continue</button></div>`;
+     return;
+   }
+   document.getElementById("results").innerHTML=`<div class="detail"><h3>▶ More open-license videos</h3><p>All results stay inside the app. Source: Wikimedia Commons.</p><div class="moreVideoList">${videos.map((v,i)=>`<button class="secondary moreVideo" data-action="more-video" data-video-url="${esc(v.url)}" data-video-title="${esc(v.title)}">▶ ${i+1}. ${esc(v.title.replace(/^File:/,''))}<small>${esc(v.license)} • ${esc(v.author)}</small></button>`).join('')}</div><button class="secondary" data-action="close-search">Close</button></div>`;
+ }catch(e){
+   document.getElementById("results").innerHTML=`<div class="detail"><h3>⚠️ Video search unavailable</h3><p>Check the Internet connection. No external browser will be opened.</p><button class="secondary" data-action="close-search">Close</button></div>`;
+ }
+}
+function playVideo(){const v=document.getElementById("cultureVideo");if(v){v.play().catch(()=>{toast("Video could not start. Check Internet connection.")});v.scrollIntoView({behavior:"smooth",block:"center"})}}
+document.addEventListener("error",e=>{if(e.target&&e.target.tagName==="VIDEO")toast("Video failed to load. Check Internet connection.")},true);
+function countryAI(){const d=info(currentCountry),el=document.getElementById("countryAI");el.innerHTML=`<h3>🤖 Cultural AI Insight</h3><p><b>${esc(currentCountry)}:</b> ${esc(d.story)} A good next step is to explore ${esc(d.festival)} and ${esc(d.food)}.</p><div class="badges"><span class="badge">✨ AI explanation</span><span class="badge">🎬 Video recommendation</span><span class="badge">⭐ Save journey</span></div>`}
+
+document.addEventListener("click",e=>{
+ const b=e.target.closest("button[data-action]");if(!b)return;e.preventDefault();const a=b.dataset.action;
+ if(a==="nav")show(b.dataset.page);
+ else if(a==="country"){closeSearch();openCountry(b.dataset.country)}
+ else if(a==="favorite")saveFavorite(b.dataset.country);
+ else if(a==="topic")showTopic(b.dataset.topic);
+ else if(a==="state"){selectIndiaState(b.dataset.state)}
+ else if(a==="state-ai"){show("journey");document.getElementById("aiInput").value=`Tell me about ${currentRegion}, India`;runAI()}
+ else if(a==="state-video"){setRegionalVideo(currentRegion,"India");setTimeout(()=>playVideo(),700)}
+ else if(a==="country-region"){selectCountryRegion(b.dataset.country,b.dataset.region)}
+ else if(a==="region-ai"){show("journey");document.getElementById("aiInput").value=`Tell me about ${currentRegion} in ${currentCountry}`;runAI()}
+ else if(a==="region-video"){setRegionalVideo(currentRegion,currentCountry);setTimeout(()=>playVideo(),700)}
+ else if(a==="topic-video")youtube(youtubeCultureQuery(currentRegion||currentCountry,currentCountry,b.dataset.topic));
+ else if(a==="open-search")openSearch();
+ else if(a==="close-search")closeSearch();
+ else if(a==="clear-explore"){window.__focusAfterClear="country";document.getElementById("countryInput").value="";renderCountries();requestAnimationFrame(()=>{b.focus();b.classList.add("tv-focus");});}
+ else if(a==="clear-region"){const x=document.getElementById("regionInput");if(x)x.value="";renderRegionResults(currentCountry)}
+ else if(a==="clear-state"){const x=document.getElementById("stateInput");if(x)x.value="";renderIndiaStates();window.__focusAfterClear="state";b.focus();b.classList.add("tv-focus");}
+ else if(a==="run-ai"){document.getElementById("aiSuggestions").style.display="none";runAI();}
+ else if(a==="ai-recommended-video"){findAndPlayAIRecommendedVideo(b.dataset.videoQuery||"cultural video");}
+ else if(a==="ai-play-selected"){playAISelectedVideo(b.dataset.videoUrl||"",b.dataset.mime||"webm");}
+ else if(a==="voice-cancel"){if(window.CulturalAIVoiceStop)window.CulturalAIVoiceStop();}
+ else if(a==="ai-suggestion"){const x=document.getElementById("aiInput");x.value=b.dataset.question||"";document.getElementById("aiSuggestions").style.display="none";const ask=document.querySelector('button[data-action="run-ai"]');if(ask){ask.focus();ask.classList.add("tv-focus");}else{x.focus();}}
+ else if(a==="search-suggestion"){document.getElementById("searchSuggestions").style.display="none"; if(b.dataset.state){closeSearch();show("explore");selectIndiaState(b.dataset.state);} else {closeSearch();openCountry(b.dataset.country);}}
+ else if(a==="culture-ai"){show("journey");document.getElementById("aiInput").value=`Tell me about ${currentCountry}`;runAI()}
+ else if(a==="youtube")youtube(youtubeCultureQuery(currentRegion||currentCountry,currentCountry,"culture"));
+ else if(a==="more-video"){const v=document.getElementById("cultureVideo");if(v){v.src=b.dataset.videoUrl;v.load();v.play().catch(()=>{});closeSearch();v.scrollIntoView({behavior:"smooth",block:"center"});toast("Playing selected open-license video");}}
+ else if(a==="play-video")playVideo();
+ else if(a==="country-ai")countryAI();
+ else if(a==="ai-culture-video"){const subject=currentRegion||currentCountry; if(subject){show("country"); if(currentCountry==="India" && currentRegion){setTimeout(()=>setRegionalVideo(currentRegion,"India"),50);} else {setTimeout(()=>setRegionalVideo(subject,currentCountry),50);} setTimeout(()=>playVideo(),800);}}
+});
+document.getElementById("countryInput").addEventListener("input",renderCountries);
+document.addEventListener("input",e=>{if(e.target&&e.target.id==="regionInput")renderRegionResults(currentCountry); if(e.target&&e.target.id==="stateInput")renderIndiaStates();});
+document.getElementById("mainInput").addEventListener("input",searchAll);
+document.getElementById("aiInput").addEventListener("input",e=>renderAISuggestions(e.target.value));
+document.addEventListener("keydown",e=>{
+ if(e.key==="Escape")closeSearch();
+ if(e.key==="Enter"&&document.activeElement&&document.activeElement.tagName==="BUTTON")document.activeElement.click();
+ if(e.key==="/"&&document.activeElement.tagName!=="INPUT"){e.preventDefault();openSearch()}
+});
+renderFeatured();renderHomeCountries();renderCountries();renderFavorites();
+</script>
+
+<script>
+/* =========================================================
+   FIRE TV REMOTE-FIRST NAVIGATION — FINAL
+   - Focus is limited to the active TV screen.
+   - D-pad moves spatially between real controls/cards.
+   - Inputs keep Left/Right for text editing.
+   - Down/Up from an input enters/leaves suggestions.
+   - Enter on AI input moves to Ask AI; OK then submits.
+   - Back returns to the previous in-app screen instead of
+     behaving like a browser back button.
+   ========================================================= */
+(function(){
+  const SELECTOR='button, a[href], input, select, textarea, [role="button"]';
+  const isTyping=el=>!!el && (el.tagName==='INPUT'||el.tagName==='TEXTAREA'||el.isContentEditable);
+  const isHeader=el=>!!el && !!el.closest('header');
+  const searchOpen=()=>document.getElementById('searchModal')?.classList.contains('open');
+
+  function visible(el){
+    if(!el) return false;
+    const r=el.getBoundingClientRect(), st=getComputedStyle(el);
+    return st.display!=='none' && st.visibility!=='hidden' && r.width>0 && r.height>0 &&
+      !el.disabled && !el.closest('[aria-hidden="true"]');
+  }
+
+  function activeView(){ return document.querySelector('.view.active'); }
+
+  function focusables(){
+    let root;
+    if(searchOpen()) root=document.getElementById('searchModal');
+    else root=activeView();
+    const els=[...(root?root.querySelectorAll(SELECTOR):[])];
+    if(!searchOpen()) els.push(...document.querySelectorAll('header button, header a[href]'));
+    return els.filter(visible);
+  }
+
+  function contentItems(){
+    return focusables().filter(el=>!isHeader(el));
+  }
+
+  function setFocus(el,scroll=true){
+    if(!visible(el)) return;
+    document.querySelectorAll('.tv-focus').forEach(x=>x.classList.remove('tv-focus'));
+    el.classList.add('tv-focus');
+    try{el.focus({preventScroll:true});}catch(_){el.focus();}
+    if(scroll){
+      try{el.scrollIntoView({block:'nearest',inline:'nearest',behavior:'smooth'});}catch(_){el.scrollIntoView({block:'nearest',inline:'nearest'});}
+    }
+  }
+
+  function suggestions(id,cls){
+    const box=document.getElementById(id);
+    if(!box || getComputedStyle(box).display==='none') return [];
+    return [...box.querySelectorAll(cls)].filter(visible);
+  }
+
+  function firstContent(){
+    const items=contentItems();
+    return items[0]||null;
+  }
+
+  function firstHeader(){
+    return [...document.querySelectorAll('header button,header a[href]')].filter(visible)[0]||null;
+  }
+
+  // Strong spatial navigation: same row/column wins first, then distance.
+  function nearest(current,dir){
+    const items=focusables().filter(x=>x!==current);
+    if(!current||!items.length) return null;
+    const a=current.getBoundingClientRect();
+    const acx=a.left+a.width/2, acy=a.top+a.height/2;
+    const candidates=[];
+    for(const el of items){
+      const r=el.getBoundingClientRect();
+      const cx=r.left+r.width/2, cy=r.top+r.height/2;
+      const overlapX=r.left<a.right && r.right>a.left;
+      const overlapY=r.top<a.bottom && r.bottom>a.top;
+      let valid=false, primary=0, cross=0, overlap=false;
+      if(dir==='right' && r.left>=a.right-4){valid=true;primary=r.left-a.right;cross=Math.abs(cy-acy);overlap=overlapY;}
+      if(dir==='left' && r.right<=a.left+4){valid=true;primary=a.left-r.right;cross=Math.abs(cy-acy);overlap=overlapY;}
+      if(dir==='down' && r.top>=a.bottom-4){valid=true;primary=r.top-a.bottom;cross=Math.abs(cx-acx);overlap=overlapX;}
+      if(dir==='up' && r.bottom<=a.top+4){valid=true;primary=a.top-r.bottom;cross=Math.abs(cx-acx);overlap=overlapX;}
+      if(!valid) continue;
+      if(!overlap){
+        const limit=(dir==='left'||dir==='right')?Math.max(a.height*2.2,100):Math.max(a.width*1.35,160);
+        if(cross>limit) continue;
+      }
+      // Huge penalty for crossing rows/columns; this fixes TV grid zig-zag.
+      const score=(overlap?0:100000)+primary*20+cross*4;
+      candidates.push({el,score});
+    }
+    candidates.sort((x,y)=>x.score-y.score);
+    return candidates[0]?.el||null;
+  }
+
+  function moveVerticalLinear(current,dir){
+    const items=contentItems();
+    const i=items.indexOf(current);
+    if(i<0) return null;
+    // Only used as an edge fallback, never as the main navigation algorithm.
+    return dir==='down'?(items[i+1]||null):(items[i-1]||null);
+  }
+
+  function focusAfterRender(preferredSelector){
+    setTimeout(()=>{
+      const el=preferredSelector?document.querySelector(preferredSelector):firstContent();
+      if(el&&visible(el)) setFocus(el,false);
+    },80);
+  }
+
+  // Public hook for the Android Activity's physical Back key.
+  window.fireTvBack=function(){
+    if(searchOpen()){
+      closeSearch();
+      focusAfterRender();
+      return true;
+    }
+    const active=activeView();
+    if(active?.id==='country'){
+      show('explore');
+      focusAfterRender('#explore input, #explore .card button');
+      return true;
+    }
+    if(active?.id==='journey' || active?.id==='favorites'){
+      show('home');
+      focusAfterRender('#home .primary, #home .secondary');
+      return true;
+    }
+    if(active?.id==='explore'){
+      show('home');
+      focusAfterRender('#home .primary, #home .secondary');
+      return true;
+    }
+    return false;
+  };
+
+  document.addEventListener('keydown',function(e){
+    const rk=e.key;
+    const dk=({Down:'ArrowDown',DPAD_DOWN:'ArrowDown','dpad-down':'ArrowDown',Up:'ArrowUp',DPAD_UP:'ArrowUp','dpad-up':'ArrowUp',Left:'ArrowLeft',DPAD_LEFT:'ArrowLeft','dpad-left':'ArrowLeft',Right:'ArrowRight',DPAD_RIGHT:'ArrowRight','dpad-right':'ArrowRight'})[rk] || ({40:'ArrowDown',38:'ArrowUp',37:'ArrowLeft',39:'ArrowRight'}[e.keyCode]) || rk;
+    const a=document.activeElement;
+    const visual=document.querySelector('.tv-focus');
+    const clearFocused =
+      (a && a.dataset && a.dataset.action==='clear-explore') ||
+      (visual && visual.dataset && visual.dataset.action==='clear-explore') ||
+      window.__focusAfterClear==='country';
+
+    // HARD RULE: after Clear, DOWN must enter the country grid.
+    // Do this before any generic scrolling/spatial navigation.
+    if(dk==='ArrowDown' && clearFocused){
+      const first=document.querySelector('#countries button[data-action="country"]');
+      if(first){
+        e.preventDefault();
+        e.stopImmediatePropagation();
+        window.__focusAfterClear=null;
+        document.querySelectorAll('.tv-focus').forEach(x=>x.classList.remove('tv-focus'));
+        first.classList.add('tv-focus');
+        try{first.focus({preventScroll:true});}catch(_){first.focus();}
+        try{first.scrollIntoView({block:'nearest',inline:'nearest'});}catch(_){}
+        return;
+      }
+    }
+  }, true);
+
+  document.addEventListener('keydown',function(e){
+    // Normalize browser, VVD and physical-remote D-pad key variants.
+    const rawKey=e.key;
+    const key = ({
+      Down:'ArrowDown', DPAD_DOWN:'ArrowDown', 'dpad-down':'ArrowDown',
+      Up:'ArrowUp', DPAD_UP:'ArrowUp', 'dpad-up':'ArrowUp',
+      Left:'ArrowLeft', DPAD_LEFT:'ArrowLeft', 'dpad-left':'ArrowLeft',
+      Right:'ArrowRight', DPAD_RIGHT:'ArrowRight', 'dpad-right':'ArrowRight'
+    })[rawKey] || ({40:'ArrowDown',38:'ArrowUp',37:'ArrowLeft',39:'ArrowRight'}[e.keyCode]) || rawKey;
+    let active=document.activeElement;
+    const visualFocus=document.querySelector('.tv-focus');
+    if(visualFocus && (!active || active===document.body || !visible(active))) active=visualFocus;
+
+    // Physical/virtual Back variants that a browser/WebView may expose.
+    if(key==='Escape'||key==='BrowserBack'||key==='GoBack'){
+      e.preventDefault(); e.stopImmediatePropagation();
+      window.fireTvBack();
+      return;
+    }
+
+    // Text entry: do NOT steal Left/Right. TV users need these for editing.
+    if(isTyping(active)){
+      if(active.id==='aiInput'){
+        const list=suggestions('aiSuggestions','button.aiSuggestion');
+        if(key==='ArrowDown'){
+          e.preventDefault(); e.stopImmediatePropagation();
+          if(list.length) setFocus(list[0]);
+          else setFocus(document.querySelector('#journey button[data-action="run-ai"]'));
+          return;
+        }
+        if(key==='ArrowUp'){
+          e.preventDefault(); e.stopImmediatePropagation();
+          if(list.length) setFocus(list[list.length-1]);
+          else setFocus(document.querySelector('#journey button[data-action="run-ai"]'));
+          return;
+        }
+        if(key==='Enter'){
+          // After voice/text entry, move to the Ask AI button. User presses OK.
+          e.preventDefault(); e.stopImmediatePropagation();
+          const ask=document.querySelector('#journey button[data-action="run-ai"]');
+          if(ask){active.blur();setFocus(ask);}
+          return;
+        }
+        return;
+      }
+
+      if(active.id==='mainInput'){
+        const list=suggestions('searchSuggestions','button.searchSuggestion');
+        if(key==='ArrowDown'){
+          e.preventDefault(); e.stopImmediatePropagation();
+          if(list.length) setFocus(list[0]);
+          else setFocus(document.querySelector('#searchModal button[data-action="close-search"]'));
+          return;
+        }
+        if(key==='ArrowUp'){
+          e.preventDefault(); e.stopImmediatePropagation();
+          if(list.length) setFocus(list[list.length-1]);
+          return;
+        }
+        if(key==='Enter'){
+          e.preventDefault(); e.stopImmediatePropagation();
+          if(list.length) setFocus(list[0]);
+          return;
+        }
+        return;
+      }
+      return;
+    }
+
+    if(['ArrowLeft','ArrowRight','ArrowUp','ArrowDown'].includes(key)){
+      e.preventDefault(); e.stopImmediatePropagation();
+      active=document.activeElement;
+      const dir={ArrowLeft:'left',ArrowRight:'right',ArrowUp:'up',ArrowDown:'down'}[key];
+      const items=focusables();
+      if(!items.includes(active)){
+        const target=searchOpen()?document.getElementById('mainInput'):firstContent();
+        if(target) setFocus(target);
+        return;
+      }
+
+      // Header is a horizontal navigation row.
+      if(isHeader(active) && !searchOpen()){
+        if(dir==='down'){
+          const target=firstContent();
+          if(target){setFocus(target);return;}
+        }
+        const next=nearest(active,dir);
+        if(next){setFocus(next);return;}
+        return;
+      }
+
+      // Search suggestion list is a vertical list: Up/Down one-by-one.
+      if(active.classList.contains('searchSuggestion')){
+        const list=suggestions('searchSuggestions','button.searchSuggestion');
+        const i=list.indexOf(active);
+        if(dir==='down' && list[i+1]){setFocus(list[i+1]);return;}
+        if(dir==='up' && list[i-1]){setFocus(list[i-1]);return;}
+        if(dir==='up' && i===0){setFocus(document.getElementById('mainInput'));return;}
+        // Left/Right leave the list cleanly.
+        if(dir==='left' || dir==='right'){
+          const close=document.querySelector('#searchModal button[data-action="close-search"]');
+          if(close)setFocus(close);
+          return;
+        }
+      }
+
+      // After pressing the Clear button on the India State search, keep the
+      // Clear button focused. The next DOWN press must enter the first state
+      // card (Assam), so the whole flow works with a TV remote and no mouse.
+      if(window.__focusAfterClear==='state' && active && active.dataset && active.dataset.action==='clear-state' && dir==='down'){
+        window.__focusAfterClear=null;
+        const firstState=document.querySelector('#stateGrid button[data-action=\"state\"]');
+        if(firstState){ e.preventDefault(); e.stopImmediatePropagation(); setFocus(firstState); return; }
+      }
+
+      if(active.classList.contains('aiSuggestion')){
+        const list=suggestions('aiSuggestions','button.aiSuggestion');
+        const i=list.indexOf(active);
+        if(dir==='down' && list[i+1]){setFocus(list[i+1]);return;}
+        if(dir==='up' && list[i-1]){setFocus(list[i-1]);return;}
+        if(dir==='up' && i===0){setFocus(document.getElementById('aiInput'));return;}
+      }
+
+      let next=nearest(active,dir);
+      if(!next && (dir==='up'||dir==='down')) next=moveVerticalLinear(active,dir);
+
+      if(next){setFocus(next);return;}
+
+      // At the top of the active page, Up returns to header.
+      if(dir==='up' && !searchOpen()){
+        const first=contentItems()[0];
+        if(first===active){
+          const h=firstHeader();
+          if(h){setFocus(h);return;}
+        }
+      }
+
+      // At an edge, scroll only the TV content area and then focus the nearest
+      // newly visible target. Never jump to the Home/header automatically.
+      if((dir==='down'||dir==='up')&&!searchOpen()){
+        const sc=document.querySelector('main');
+        if(sc){
+          const amount=Math.max(280,window.innerHeight*.62)*(dir==='down'?1:-1);
+          sc.scrollBy({top:amount,behavior:'smooth'});
+          setTimeout(()=>{
+            const items=contentItems().filter(visible);
+            if(items.length){
+              const pick=dir==='down'?items.find(x=>x.getBoundingClientRect().top>70)||items[0]:[...items].reverse().find(x=>x.getBoundingClientRect().bottom<window.innerHeight-70)||items[items.length-1];
+              setFocus(pick,false);
+            }
+          },320);
+        }
+      }
+      return;
+    }
+
+    // OK/Enter activates the focused TV control.
+    if((key==='Enter'||key===' '||e.keyCode===13) && active && active.matches('button,a,[role="button"]')){
+      e.preventDefault(); e.stopImmediatePropagation(); active.click();
+    }
+  },true); // capture phase so browser/default handlers cannot steal the D-pad
+
+  // Make the first usable target focusable after every screen transition.
+  const oldShow=window.show;
+  if(typeof oldShow==='function'){
+    window.show=function(page){
+      oldShow(page);
+      focusAfterRender();
+    };
+  }
+
+  // Start on Home with a predictable focus target.
+  focusAfterRender('#home .primary, #home .secondary');
+})();
+</script>
+
+
+<script>
+/* CULTURAL AI WORLD TV — REAL VOICE INPUT + TV REMOTE VISUAL FEEDBACK */
+(function(){
+  const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+  let recognition=null, listening=false;
+
+  function setButtons(active){
+    document.querySelectorAll(".voiceSearchBtn").forEach(b=>{
+      b.classList.toggle("listening",active);
+      b.textContent=active?"⏹️ Listening…":"🎙️ Voice Search";
+    });
+    const ov=document.getElementById("voiceListeningOverlay");
+    if(ov){
+      ov.classList.toggle("open",active);
+      ov.setAttribute("aria-hidden",String(!active));
+    }
+  }
+  function status(text,hint){
+    const el=document.getElementById("voiceListeningText"); if(el)el.textContent=text;
+    const hi=document.getElementById("voiceListeningHint"); if(hi)hi.textContent=hint||"";
+    const st=document.getElementById("voiceStatus"); if(st)st.textContent=text;
+  }
+  function stop(){
+    if(recognition){try{recognition.stop()}catch(_){}}
+    listening=false;setButtons(false);
+  }
+  function start(){
+    // Blink starts immediately when the remote/click activates Voice Search.
+    if(listening){stop();return;}
+    setButtons(true);
+    status("🎙️ Starting microphone…","Speak: “Show me Japan food” or “Assam Bihu festival”.");
+
+    if(!SR){
+      status("⚠️ Voice API not available","Chrome/HTTPS may support this. Fire TV/VVD needs native voice integration; use D-pad/text there.");
+      setTimeout(()=>setButtons(false),2200);
+      return;
+    }
+
+    try{
+      recognition=new SR();
+      recognition.lang="en-IN";
+      recognition.interimResults=true;
+      recognition.continuous=false;
+      recognition.maxAlternatives=1;
+
+      recognition.onstart=()=>{listening=true;setButtons(true);status("🔴 Listening…","Speak now — country, food, festival, language or culture.");};
+      recognition.onresult=(e)=>{
+        let text="";
+        for(let i=e.resultIndex;i<e.results.length;i++)text+=e.results[i][0].transcript+" ";
+        text=text.trim();
+        const input=document.getElementById("mainInput");
+        if(input){input.value=text;input.dispatchEvent(new Event("input",{bubbles:true}));}
+        status("🟢 Heard: "+text,"Searching Cultural AI World TV…");
+        const last=e.results[e.results.length-1];
+        if(last&&last.isFinal){
+          setTimeout(()=>{
+            setButtons(false);
+            const modal=document.getElementById("searchModal");
+            if(modal)modal.classList.add("open");
+            const input=document.getElementById("mainInput");
+            if(input){input.value=text;input.dispatchEvent(new Event("input",{bubbles:true}));}
+            // Search results are generated by the app's existing searchAll().
+            const first=document.querySelector("#results button.result");
+            if(first){first.classList.add("tv-focus");first.focus();}
+          },450);
+        }
+      };
+      recognition.onerror=(e)=>{
+        const msg=e.error==="not-allowed"?"Microphone permission blocked. Allow microphone access in Chrome.":("Voice error: "+(e.error||"unknown"));
+        status("⚠️ "+msg,"You can continue with D-pad/text search.");
+        setTimeout(()=>setButtons(false),1800);
+      };
+      recognition.onend=()=>{if(listening){listening=false;setButtons(false);}};
+      recognition.start();
+    }catch(err){
+      status("⚠️ Could not start voice input","Try again after allowing microphone permission.");
+      setTimeout(()=>setButtons(false),1800);
+    }
+  }
+
+  document.addEventListener("click",e=>{
+    const b=e.target.closest('[data-action="voice-search"]');
+    if(b){e.preventDefault();e.stopPropagation();start();}
+  },false);
+
+  window.CulturalAIVoiceSearch=start;
+  window.CulturalAIVoiceStop=stop;
+})();
+</script>
+
+</body>
+</html>
