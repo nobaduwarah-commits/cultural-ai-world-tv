@@ -23,24 +23,7 @@ h1{font-size:58px;line-height:1.03;margin:10px 0 16px}.hero p{font-size:19px;lin
 .globe{font-size:140px}.sectionTitle{margin:25px 0 14px}.sectionTitle h2{margin:0;font-size:30px}.sectionTitle p{color:var(--muted)}
 .searchbar{display:flex;gap:12px;margin:18px 0}.searchbar input{flex:1;background:#0b1d2d;color:#fff;border:1px solid #31546c;border-radius:12px;padding:16px;font-size:18px}
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:15px}.homeCountries .card{}
-.card{background:var(--panel);border:1px solid var(--line);border-radius:16px;overflow:hidden}.card button{width:100%;min-height:165px;text-align:left;padding:18px;background:transparent;border:0}
-/* ===== CONSISTENT TV/MOUSE FOCUS FOR ALL COUNTRY & STATE CARDS =====
-   State cards and country cards must show the same visible focus/hover ring.
-   This makes the active item obvious with both mouse and D-pad. */
-.card:hover,
-.card:has(> button:hover),
-.card:has(> button:focus),
-.card:has(> button.tv-focus) {
-  border-color: var(--cyan) !important;
-  box-shadow: 0 0 0 4px rgba(57,245,255,.18), 0 0 22px rgba(57,245,255,.35) !important;
-}
-.card > button:hover,
-.card > button:focus,
-.card > button.tv-focus {
-  outline: 3px solid var(--cyan) !important;
-  outline-offset: 4px !important;
-}
-
+.card{background:var(--panel);border:1px solid var(--line);border-radius:16px;overflow:hidden;transition:border-color .18s ease,box-shadow .18s ease,transform .18s ease}.card button{width:100%;min-height:165px;text-align:left;padding:18px;background:transparent;border:0}.card:hover,.card:focus-within{border-color:var(--cyan);box-shadow:0 0 0 3px rgba(57,245,255,.16),0 0 18px rgba(57,245,255,.18);transform:translateY(-2px)}.card button:focus{outline:none}.stateCard:hover,.stateCard:focus{border-color:var(--cyan);box-shadow:0 0 0 3px rgba(57,245,255,.16),0 0 18px rgba(57,245,255,.18);transform:translateY(-2px)}
 .flag{font-size:36px}.card h3{margin:7px 0;font-size:20px}.muted{color:var(--muted);font-size:14px;line-height:1.45}
 .countryHead{display:flex;justify-content:space-between;align-items:flex-start;gap:20px}.countryHead h1{font-size:46px;margin:4px 0}
 .facts{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin:22px 0}.fact{background:var(--panel);border:1px solid var(--line);border-radius:15px}
@@ -258,6 +241,11 @@ button, a, [role="button"], input, select, .card, .topic, .country, .state {
   .grid{grid-template-columns:repeat(4,minmax(250px,1fr))}
 }
 
+@media (max-width:900px){
+  .aiJourneyColumns{grid-template-columns:1fr}
+  .aiJourneySide{width:100%}
+}
+
 
 /* FINAL FIRE TV REMOTE UX */
 input:focus{caret-color:var(--cyan)}
@@ -306,6 +294,96 @@ input:focus{caret-color:var(--cyan)}
   opacity:.9;
 }
 
+
+/* ===== FINAL VIDEO-FIRST FIRE TV EXPERIENCE ===== */
+.videoHeroVisual{
+  height:min(48vh,460px);border:1px solid #34627e;border-radius:30px;
+  overflow:hidden;position:relative;background:#02080d;box-shadow:0 20px 60px #0008
+}
+.videoHeroVisual>video{width:100%;height:100%;object-fit:cover;display:block;background:#02080d}
+.videoHeroVisual>video:fullscreen{width:100vw;height:100vh;object-fit:contain;background:#000}
+.videoHeroVisual>video:-webkit-full-screen{width:100vw;height:100vh;object-fit:contain;background:#000}
+.videoHeroOverlay{
+  position:absolute;left:0;right:0;bottom:76px;padding:65px 24px 18px;
+  background:linear-gradient(transparent,#02080ddd);pointer-events:none
+}
+.videoHeroOverlay b{font-size:24px}.videoHeroOverlay span{display:block;color:#b9d3e1;margin-top:6px}
+.videoHeroControls{
+  display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap;
+  margin-top:10px;padding:8px 0
+}
+.videoHeroControls button{
+  min-width:112px
+}
+.videoHeroControls .videoTime{
+  min-width:74px
+}
+.videoHeroControls button{
+  min-height:45px;padding:9px 13px;border-radius:12px;background:#082238ee;
+  color:#fff;border:1px solid #55e5ff;font-weight:800;cursor:pointer
+}
+.videoHeroControls button:focus{outline:3px solid var(--cyan);outline-offset:3px}
+.videoHeroControls .videoTime{
+  min-width:74px;text-align:center;font-weight:800;background:#071a2acc;
+  border-radius:10px;padding:10px 8px
+}
+.aiJourneyColumns{
+  display:grid;
+  grid-template-columns:minmax(0,1.08fr) minmax(360px,.92fr);
+  gap:18px;
+  align-items:start;
+}
+.aiJourneyMain{min-width:0}
+.aiJourneySide{min-width:0;display:flex;flex-direction:column;gap:14px}
+.aiSelectedVideoPanel{
+  background:#071827;
+  border:1px solid #31566e;
+  border-radius:16px;
+  padding:14px;
+  min-height:270px;
+}
+.aiSelectedVideoPanel h3{margin:0 0 8px;color:var(--cyan);font-size:20px}
+.aiSelectedVideoPanel p{margin:0 0 12px;color:#b9d3e1;font-size:13px}
+.aiSelectedVideoPanel video{
+  display:block;width:100%;max-height:430px;aspect-ratio:16/9;
+  object-fit:contain;background:#000;border-radius:12px;
+}
+.aiSelectedVideoMeta{margin-top:10px;color:#d8f8ff;font-size:13px;line-height:1.4}
+.aiSelectedVideoControls{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.aiSelectedVideoControls button{padding:10px 13px}
+
+.aiRelatedWrap{
+  margin-top:0;border:1px solid #31566e;border-radius:16px;
+  background:#071827;overflow:hidden
+}
+.aiRelatedToggle{
+  width:100%;text-align:left;border:0;border-radius:0;background:#0c2538;
+  color:#fff;padding:16px 18px;font-size:18px;font-weight:900;cursor:pointer
+}
+.aiRelatedList{
+  display:grid;grid-template-columns:1fr;gap:12px;padding:12px;max-height:520px;overflow:auto
+}
+.aiRelatedCard{
+  padding:0;overflow:hidden;text-align:left;border:1px solid #31566e;
+  border-radius:15px;background:#081a29;color:#fff;cursor:pointer
+}
+.aiRelatedCard:focus{outline:4px solid var(--cyan);outline-offset:3px}
+.aiRelatedCard video{
+  display:block;width:100%;height:145px;object-fit:cover;background:#02080d
+}
+.aiRelatedInfo{padding:12px}.aiRelatedInfo b{display:block;font-size:16px}
+.aiRelatedInfo small{display:block;color:#b9d3e1;margin-top:6px;line-height:1.35}
+.aiRelatedLoading{padding:16px;color:#b9d3e1}
+@media(max-width:900px){
+  .aiJourneyColumns{grid-template-columns:1fr}
+  .aiRelatedList{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media(max-width:560px){
+  .aiRelatedList{grid-template-columns:1fr}
+  .aiJourneyColumns{grid-template-columns:1fr}
+  .videoHeroVisual{height:300px}
+}
+
 </style>
 </head>
 <body>
@@ -326,19 +404,53 @@ input:focus{caret-color:var(--cyan)}
 <main>
 <section id="home" class="view active">
 <div class="hero">
-<div><div class="kicker">FIRE TV • CULTURE + AI + VIDEO</div>
-<h1>Discover the world, one culture at a time.</h1>
-<p>Explore festivals, food, languages and regional traditions — then ask Cultural AI to explain what you are watching and recommend your next cultural story.</p>
+<div>
+<div class="kicker">FIRE TV • CULTURE VIDEO + AI</div>
+<h1>Watch the world’s cultures.</h1>
+<p>Discover festivals, traditional dance, food, music and regional stories through video. Then ask Cultural AI to understand what you are watching and find related videos.</p>
 <div class="buttons">
-<button class="primary" data-action="country" data-country="India">▶ Start with India</button>
+<button class="primary" data-action="country" data-country="India">▶ Watch Culture</button>
 <button class="secondary" data-action="nav" data-page="explore">🌍 Explore Countries</button>
-</div></div>
-<div class="heroVisual"><div class="globe">🌍</div></div>
 </div>
-<div class="detail" style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:18px"><div><b>🌍 195 Countries</b><div class="muted">Search the world</div></div><div><b>🤖 Cultural AI</b><div class="muted">Ask & discover</div></div><div><b>🎬 Video Stories</b><div class="muted">Watch culture</div></div><div><b>⭐ Favorites</b><div class="muted">Save journeys</div></div></div>
-<div class="sectionTitle"><h2>Featured cultural stories</h2><p>Every card opens a complete culture → topic → video experience.</p></div>
-<div id="featured" class="grid"></div><div class="sectionTitle"><h2>🌍 All 195 Countries</h2><p>Every country is available — select any country to explore its culture.</p></div><div id="homeCountries" class="grid"></div><div class="sectionTitle"><h2>How it works</h2><p>One simple TV journey from curiosity to culture.</p></div><div class="detail"><div class="badges"><span class="badge">1. 🌍 Choose a country</span><span class="badge">2. 🎉 Pick a topic</span><span class="badge">3. 🤖 Ask Cultural AI</span><span class="badge">4. 🎬 Watch a story</span><span class="badge">5. ⭐ Save it</span></div></div>
+</div>
 
+<div class="videoHeroVisual">
+<video id="homeFeaturedVideo" muted playsinline preload="metadata">
+<source src="https://upload.wikimedia.org/wikipedia/commons/e/e3/Bihu_world_record.webm" type="video/webm">
+</video>
+<div class="videoHeroOverlay">
+<b id="homeVideoTitle">🇮🇳 Assam • Bihu</b>
+<span id="homeVideoSubtitle">Festival • Dance • Music • Open-licensed video</span>
+</div>
+</div>
+<div class="videoHeroControls">
+<button type="button" data-action="video-prev">◀ Prev</button>
+<button type="button" data-action="video-play">▶ Play</button>
+<button type="button" data-action="video-sound">🔊 Sound On</button>
+<button type="button" data-action="video-fullscreen">⛶ Full Screen</button>
+<button type="button" data-action="video-next">Next ▶</button>
+<span class="videoTime" id="homeVideoTime">00:00</span>
+</div>
+</div>
+
+<div class="detail" style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:18px">
+<div><b>🎬 Culture Videos</b><div class="muted">Watch first</div></div>
+<div><b>🌍 195 Countries</b><div class="muted">Explore globally</div></div>
+<div><b>🤖 Cultural AI</b><div class="muted">Ask & discover</div></div>
+<div><b>⭐ Favorites</b><div class="muted">Save stories</div></div>
+</div>
+
+<div class="sectionTitle"><h2>🎬 Featured Cultural Stories</h2><p>Use Next to move from Assam to the next country. Press Play for video + sound.</p></div>
+<div id="featured" class="grid"></div>
+
+<div class="sectionTitle"><h2>🌍 All 195 Countries</h2><p>Every country is available — select any country to explore its culture.</p></div>
+<div id="homeCountries" class="grid"></div>
+
+<div class="sectionTitle"><h2>How it works</h2><p>Video first → AI understanding → related cultural stories.</p></div>
+<div class="detail"><div class="badges">
+<span class="badge">1. 🎬 Watch</span><span class="badge">2. 🌍 Choose country</span>
+<span class="badge">3. 🎉 Pick topic</span><span class="badge">4. 🤖 Ask AI</span><span class="badge">5. ⭐ Save journey</span>
+</div></div>
 </section>
 
 <section id="explore" class="view">
@@ -351,8 +463,16 @@ input:focus{caret-color:var(--cyan)}
 <div class="sectionTitle"><h2>✨ Cultural AI Journey</h2><p>Ask a cultural question and get a guided next step. Use the Fire TV remote D-pad to navigate and OK to select.</p></div>
 <div class="detail">
 <h3>🤖 Cultural AI Concierge</h3>
-<div class="aiBox"><div class="aiInputWrap"><input id="aiInput" placeholder="Example: Why is Bihu important?" autocomplete="off"><div id="aiSuggestions" class="aiSuggestions"></div></div><button class="primary" data-action="run-ai">Ask AI</button></div>
-<div id="aiAnswer" style="margin-top:15px">Try asking about Bihu, Japanese festivals, Mexican food, Korean music, or any country.</div>
+<div class="aiJourneyColumns">
+  <div class="aiJourneyMain">
+    <div class="aiBox"><div class="aiInputWrap"><input id="aiInput" placeholder="Example: Why is Bihu important?" autocomplete="off"><div id="aiSuggestions" class="aiSuggestions"></div></div><button class="primary" data-action="run-ai">Ask AI</button></div>
+    <div id="aiAnswer" style="margin-top:15px">Try asking about Bihu, Japanese festivals, Mexican food, Korean music, or any country.</div>
+  </div>
+  <div class="aiJourneySide">
+    <div id="aiSelectedVideoPanel" class="aiSelectedVideoPanel" style="display:none"></div>
+    <div id="aiRelatedVideos" class="aiRelatedWrap" style="display:none"></div>
+  </div>
+</div>
 </div>
 <h2>Suggested journeys</h2><div id="journeys" class="grid"></div>
 </section>
@@ -534,7 +654,7 @@ function cultureVideoQuery(subject,country){
  const culture=(d?.culture||'traditional culture').replace(/\s+/g,' ').slice(0,90);
  return `${subject} ${country} ${fest} ${food} ${culture} traditional culture dance`;
 }
-async function findCommonsCultureVideo(subject,country){
+async function findCommonsCultureVideo(subject,country,topic="culture"){
  const d=(country==='India' && INDIA_STATES[subject])?INDIA_STATES[subject]:regionData(country,subject);
  const fest=(d?.fest||d?.festival||'traditional festival').split('•')[0].trim();
  const food=(d?.food||'traditional food').split('•')[0].trim();
@@ -561,13 +681,13 @@ async function findCommonsCultureVideo(subject,country){
       const mime=ii?.mime||'';
       const meta=ii?.extmetadata||{};
       const license=[meta.LicenseShortName?.value||'',meta.License?.value||'',meta.UsageTerms?.value||''].join(' ');
-      return mime.startsWith('video/') && allowed.test(license);
+      return mime.startsWith('video/') && allowed.test(license) && videoMatchesLocation(x.title,meta,subject,country) && videoMatchesTopic((x.title||'').replace(/^File:/,''),subject+' '+topic,topic);
    });
    const score=t=>{
       const title=(t.title||'').toLowerCase();
       const meta=t.imageinfo?.[0]?.extmetadata||{};
-      const text=[title,meta.ImageDescription?.value||''].join(' ').toLowerCase();
-      return words.reduce((n,w)=>n+(text.includes(w)?3:0),0)+(text.includes('traditional')?2:0)+(text.includes('dance')?2:0)+(text.includes('festival')?2:0);
+      const text=[title,cleanMetaText(meta)].join(' ').toLowerCase();
+      return words.reduce((n,w)=>n+(text.includes(w)?3:0),0)+(text.includes('traditional')?2:0)+(text.includes(topic)?4:0);
    };
    candidates.sort((a,b)=>score(b)-score(a));
    const hit=candidates[0];
@@ -590,7 +710,7 @@ function setRegionalVideo(subject,country){
  const box=document.querySelector('.videoBox'); if(!box)return;
  const exact=(typeof TOPIC_VIDEOS!=='undefined' && TOPIC_VIDEOS[subject]) ? {url:TOPIC_VIDEOS[subject],title:subject+' cultural video',author:'Wikimedia Commons contributor',license:'See Wikimedia Commons file page',source:'Wikimedia Commons'} : null;
  box.innerHTML=`<div class="videoTitle"><div><div class="kicker">EXACT REGIONAL CULTURAL STORY</div><h2>▶ ${esc(subject)} • ${esc(country)}</h2></div></div><div class="videoPlaceholder"><div>🎬</div><b>${exact?'Loading verified '+esc(subject)+' cultural video…':'Finding an open-license '+esc(subject)+' tradition video…'}</b><p>Only media matching this exact state/region and an open license will be shown.</p></div>`;
- const finder=exact ? Promise.resolve(exact) : findCommonsCultureVideo(subject,country);
+ const finder=exact ? Promise.resolve(exact) : findCommonsCultureVideo(subject,country,"culture");
  finder.then(info=>{
    if(!box.isConnected)return;
    if(info?.url){box.innerHTML=`<div class="videoTitle"><div><div class="kicker">EXACT REGIONAL CULTURAL STORY</div><h2>▶ ${esc(subject)} • ${esc(country)}</h2></div><button class="secondary" data-action="play-video">▶ Play</button></div><video id="cultureVideo" controls playsinline preload="metadata"><source src="${esc(info.url)}"></video><div class="videoMeta"><span>● EXACT REGION MATCH</span><span>${esc(info.source)} • ${esc(info.license)} • ${esc(info.author)}</span></div>`;}
@@ -623,6 +743,41 @@ const TOPIC_VIDEOS={
 "Italy":"https://upload.wikimedia.org/wikipedia/commons/7/7c/Italienischer_Bauerntanz_%281895%29.webm"
 };
 
+// Curated topic-specific videos. These are checked before broad Commons search,
+// so a focused question never falls back to an unrelated country's food/culture.
+const TOPIC_VIDEOS_BY_TOPIC={
+  "Nagaland|food":{
+    url:"https://upload.wikimedia.org/wikipedia/commons/4/46/Practices_and_consumption_of_soyabean.webm",
+    title:"Practices and consumption of soyabean — Tuensang, Nagaland",
+    license:"CC BY 3.0",
+    author:"Indigenous Community Video Collective - NE India",
+    mime:"video/webm"
+  },
+  "Nagaland|festival":{
+    url:"https://upload.wikimedia.org/wikipedia/commons/b/b8/17_Tribes%2C_One_heartbeat_-_Hornbill_Festival.webm",
+    title:"17 Tribes, One heartbeat — Hornbill Festival, Nagaland",
+    license:"Open license — Wikimedia Commons",
+    author:"Wikimedia Commons contributor",
+    mime:"video/webm"
+  },
+  "Nagaland|dance":{
+    url:"https://upload.wikimedia.org/wikipedia/commons/b/b4/Folk_dance_of_Nagaland.webm",
+    title:"Folk dance of Nagaland — Hornbill Festival",
+    license:"CC BY-SA 4.0",
+    author:"JyotiPN",
+    mime:"video/webm"
+  }
+};
+
+function getCuratedTopicVideo(subject,topic,question){
+  const key=String(subject||"").trim()+"|"+String(topic||"").trim();
+  if(TOPIC_VIDEOS_BY_TOPIC[key]) return TOPIC_VIDEOS_BY_TOPIC[key];
+  if(topic==="dance" && /nagaland/i.test(subject)) return TOPIC_VIDEOS_BY_TOPIC["Nagaland|dance"];
+  if(topic==="food" && /nagaland/i.test(subject)) return TOPIC_VIDEOS_BY_TOPIC["Nagaland|food"];
+  if(topic==="festival" && /nagaland/i.test(subject)) return TOPIC_VIDEOS_BY_TOPIC["Nagaland|festival"];
+  return null;
+}
+
 const FALLBACK={flag:"🌐",language:"Local languages",festival:"National & regional festivals",food:"Traditional local cuisine",region:"Regional heritage",video:"",story:"This country has unique cultural traditions expressed through language, food, festivals, music, arts and regional heritage."};
 let favorites=JSON.parse(localStorage.getItem("cawtvFav")||"[]"), currentCountry="India";
 const info=n=>DATA[n]||FALLBACK;
@@ -630,7 +785,29 @@ const esc=x=>String(x).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;"
 
 function card(n){const d=info(n);return `<div class="card"><button data-action="country" data-country="${esc(n)}"><div class="flag">${d.flag}</div><h3>${esc(n)}</h3><div class="muted">${esc(d.language)}</div><p class="muted">${esc(d.festival)}</p></button></div>`}
 
+function stopAllVideos(){
+  // Stop every video when leaving the current screen so audio/video never
+  // continues underneath another TV screen. Resetting currentTime and
+  // removing the source also prevents the old video from appearing when
+  // returning to Home or AI Journey.
+  document.querySelectorAll("video").forEach(v=>{
+    try{v.pause();}catch(_){}
+    try{v.currentTime=0;}catch(_){}
+    try{v.removeAttribute("src");}catch(_){}
+    try{v.querySelectorAll("source").forEach(s=>s.remove());}catch(_){}
+    try{v.load();}catch(_){}
+  });
+  const selected=document.getElementById("aiSelectedVideoPanel");
+  if(selected && !selected.closest(".view.active")){
+    selected.style.display="none";
+    selected.innerHTML="";
+  }
+}
+
 function show(page){
+ const current=document.querySelector(".view.active");
+ const currentId=current ? current.id : "";
+ if(currentId && currentId!==page) stopAllVideos();
  document.querySelectorAll(".view").forEach(x=>x.classList.remove("active"));
  const el=document.getElementById(page);if(!el)return;el.classList.add("active");
  document.querySelectorAll("#nav button").forEach(x=>x.classList.toggle("active",x.dataset.page===page));
@@ -786,6 +963,177 @@ function searchAll(){
   }
   box.innerHTML=`<div class="detail"><h3>🔎 Results for “${esc(raw)}”</h3><p class="muted">Select any result to open its cultural journey.</p><div class="searchResults">${hits.map(({n,d})=>`<button class="result" data-action="country" data-country="${esc(n)}"><div class="flag">${d.flag}</div><div><b>${esc(n)}</b><p class="muted">${esc(d.festival||"")} • ${esc(d.food||"")}</p><small>${esc(d.language||"")} • ${esc(d.region||"")}</small></div></button>`).join("")}</div></div>`;
 }
+
+/* ===== CULTURAL AI -> TOPIC-MATCHED VIDEO ENGINE ===== */
+function aiVideoQueries(question,country,region,topic,aiVideoQuery){
+  const subject=region||country||"world culture";
+  const q=String(question||"").trim();
+  const qs=[];
+  // Topic is deliberately placed first so "traditional food of Assam"
+  // searches food videos instead of generic Assam videos.
+  if(topic==="food"){
+    qs.push(`${subject} ${country||""} traditional food cuisine cooking`);
+    qs.push(`${subject} food dish recipe traditional`);
+  }else if(topic==="festival"){
+    if(/\bbihu\b/i.test(q)) {
+      qs.push(`${subject} Bihu festival traditional dance celebration`);
+      qs.push(`${subject} Bohag Bihu Rongali Bihu Magh Bihu`);
+    }
+    qs.push(`${subject} traditional festival celebration dance`);
+    qs.push(`${subject} festival cultural celebration`);
+  }else if(topic==="language"){
+    qs.push(`${subject} language traditional culture`);
+  }else if(topic==="dance"){
+    qs.push(`${subject} traditional folk dance dance performance`);
+    qs.push(`${subject} traditional dance cultural performance`);
+  }else{
+    qs.push(`${subject} traditional culture dance music heritage`);
+  }
+  if(aiVideoQuery) qs.push(aiVideoQuery);
+  qs.push(`${subject} ${q}`);
+  return [...new Set(qs.map(x=>x.trim()).filter(Boolean))];
+}
+
+function cleanMetaText(meta){
+  return [meta?.ImageDescription?.value||'',meta?.Categories?.value||'',meta?.ObjectName?.value||'',meta?.Credit?.value||'']
+    .join(' ').replace(/<[^>]+>/g,' ').replace(/\s+/g,' ').toLowerCase();
+}
+function videoMatchesTopic(title,question,topic){
+  const t=(title||'').toLowerCase();
+  if(topic==='food') return /food|cuisine|cook|cooking|recipe|dish|meal|kitchen|rice|pitha|curry|fish|sweet|soybean|ferment|pork|bamboo shoot|axone/.test(t);
+  if(topic==='dance') return /dance|dancing|folk|performance/.test(t);
+  if(topic==='festival') {
+    if(/\bbihu\b/i.test(question||'')) return /bihu|bohag|rongali|magh|kati/.test(t);
+    return /festival|celebrat|puja|fair|ceremony|carnival|holiday|new year/.test(t);
+  }
+  if(topic==='language') return /language|dialect|spoken|speech|alphabet|script/.test(t);
+  if(topic==='bird') return /bird|hornbill|eagle|kingfisher|owl|heron|stork/.test(t);
+  return /culture|cultural|traditional|tradition|heritage|custom|music|craft|dance|festival/.test(t);
+}
+function videoMatchesLocation(title,meta,subject,country){
+  const text=((title||'')+' '+cleanMetaText(meta)).toLowerCase();
+  const s=String(subject||'').toLowerCase().trim();
+  const c=String(country||'').toLowerCase().trim();
+  if(!s) return false;
+  // For a state/region request, the exact region must appear in title or metadata.
+  // This prevents a different state/country from being substituted just because the topic matches.
+  if(s!==c){
+    return text.includes(s);
+  }
+  // Country-level request: require the exact country name or a small set of safe demonyms.
+  const aliases={
+    'united states':['united states','usa','american'],
+    'united kingdom':['united kingdom','britain','england','scotland','wales'],
+    'south korea':['south korea','korea','korean'],
+    'czech republic':['czech republic','czechia'],
+    'uae':['uae','united arab emirates'],
+    'india':['india','indian'],
+    'japan':['japan','japanese'],
+    'china':['china','chinese'],
+    'france':['france','french'],
+    'mexico':['mexico','mexican'],
+    'italy':['italy','italian'],
+    'south africa':['south africa','south african']
+  };
+  return (aliases[c]||[c]).some(a=>text.includes(a));
+}
+
+async function loadRelatedAIVideos(question,country,region,topic,aiVideoQuery){
+  const wrap=document.getElementById("aiRelatedVideos");
+  if(!wrap)return;
+  wrap.style.display="block";
+  wrap.innerHTML=`<button class="aiRelatedToggle" type="button">🎬 Related ${esc(topic||"Culture")} Videos ▾</button><div class="aiRelatedLoading">Finding exact ${esc(region||country)} ${esc(topic||"culture")} videos…</div>`;
+
+  const subject=region||country;
+  const all=[],seen=new Set();
+  const allowed=/creative commons attribution|creative commons attribution-sharealike|cc by|cc by-sa|cc0|public domain|pd-old/i;
+  const curated=getCuratedTopicVideo(subject,topic,question);
+  if(curated){ all.push({...curated}); seen.add(curated.url); }
+
+  // Search only exact location + exact topic combinations. If Commons cannot prove
+  // the location from the file title/metadata, the result is rejected instead of
+  // showing an unrelated country/state video.
+  const queries=[
+    `${subject} ${country} ${topic} traditional cultural video`,
+    `${subject} ${country} ${topic} folk`,
+    `${subject} ${country} traditional ${topic}`
+  ];
+  for(const query of queries){
+    try{
+      const api='https://commons.wikimedia.org/w/api.php?action=query&generator=search&gsrsearch='+
+        encodeURIComponent(query)+'&gsrnamespace=6&gsrlimit=50&prop=imageinfo&iiprop=url|mime|extmetadata&format=json&origin=*';
+      const r=await fetch(api); const j=await r.json();
+      for(const x of Object.values(j?.query?.pages||{})){
+        const ii=x?.imageinfo?.[0],meta=ii?.extmetadata||{};
+        const url=ii?.url||"",mime=ii?.mime||"";
+        const title=(x.title||"").replace(/^File:/,"");
+        const license=(meta.LicenseShortName?.value||meta.License?.value||meta.UsageTerms?.value||"").replace(/<[^>]+>/g,"");
+        if(!url||!mime.startsWith("video/")||!allowed.test(license)||seen.has(url))continue;
+        if(!videoMatchesLocation(title,meta,subject,country))continue;
+        if(!videoMatchesTopic(title,question,topic))continue;
+        seen.add(url);
+        all.push({url,mime,title,license,author:(meta.Artist?.value||"Unknown author").replace(/<[^>]+>/g,"")});
+        if(all.length>=6)break;
+      }
+    }catch(_){ }
+    if(all.length>=6)break;
+  }
+
+  if(!all.length){
+    wrap.innerHTML=`<button class="aiRelatedToggle" type="button">🎬 Related ${esc(topic||"Culture")} Videos ▾</button><div class="aiRelatedLoading">No verified ${esc(subject)} ${esc(topic||"culture")} open-license video was found. No unrelated video is shown.</div>`;
+    return;
+  }
+
+  wrap.innerHTML=`
+  <button class="aiRelatedToggle" type="button">🎬 Related ${esc(topic||"Culture")} Videos (${all.length}) ▾</button>
+  <div class="aiRelatedList">
+  ${all.map((v,i)=>{
+    const type=/mp4/i.test(v.mime)||/\.mp4(\?|$)/i.test(v.url)?"video/mp4":"video/webm";
+    return `<button class="aiRelatedCard" data-action="ai-related-video" data-video-url="${esc(v.url)}" data-video-title="${esc(v.title)}" data-video-mime="${type}">
+      <video controls preload="metadata" playsinline><source src="${esc(v.url)}" type="${type}"></video>
+      <div class="aiRelatedInfo"><b>▶ ${i+1}. ${esc(v.title||"Cultural video")}</b><small>${esc(v.license)} • ${esc(v.author)}</small></div>
+    </button>`;
+  }).join("")}
+  </div>`;
+}
+
+function playRelatedAIVideo(url,title,mime){
+  // Keep the user on AI Journey. The selected cultural video opens in the
+  // previously empty panel beside Ask AI instead of navigating away.
+  const panel=document.getElementById("aiSelectedVideoPanel");
+  if(!panel||!url)return;
+
+  panel.style.display="block";
+  panel.innerHTML=`
+    <h3>🎬 ${esc(title||"Selected Cultural Video")}</h3>
+    <p>Selected from your Cultural AI results. Play, pause, change sound, or use fullscreen.</p>
+    <video id="aiSelectedVideo" controls playsinline preload="metadata">
+      <source src="${esc(url)}" type="${esc(mime||"video/webm")}">
+    </video>
+    <div class="aiSelectedVideoControls">
+      <button class="secondary" data-action="ai-selected-play">▶ Play / Pause</button>
+      <button class="secondary" data-action="ai-selected-sound">🔊 Sound</button>
+      <button class="secondary" data-action="ai-selected-fullscreen">⛶ Full Screen</button>
+    </div>
+    <div class="aiSelectedVideoMeta">🎥 Open-license cultural media • ${esc(title||"Cultural video")}</div>`;
+
+  const v=document.getElementById("aiSelectedVideo");
+  if(v){
+    v.muted=false;
+    v.play().catch(()=>{});
+    v.addEventListener("play",()=>{
+      const b=panel.querySelector('[data-action="ai-selected-play"]');
+      if(b)b.textContent="⏸ Pause";
+    });
+    v.addEventListener("pause",()=>{
+      const b=panel.querySelector('[data-action="ai-selected-play"]');
+      if(b)b.textContent="▶ Play";
+    });
+  }
+
+  panel.scrollIntoView({behavior:"smooth",block:"nearest"});
+}
+
 async function runAI(){
   const input=document.getElementById("aiInput");
   const qraw=input.value.trim();
@@ -816,24 +1164,40 @@ async function runAI(){
 
   let topic="culture";
   if(/traditional food|food|cuisine|dish|eat|meal|cook|cooking|recipe/.test(q)) topic="food";
-  else if(/festival|festivals|celebrat|holiday|new year|fair/.test(q)) topic="festival";
+  else if(/bihu|festival|festivals|celebrat|holiday|new year|fair/.test(q)) topic="festival";
+  else if(/dance|dancing|folk dance|traditional dance|folkdance/.test(q)) topic="dance";
   else if(/language|speak|spoken|dialect|official language/.test(q)) topic="language";
   else if(/bird/.test(q)) topic="bird";
   else if(/culture|traditional|tradition|heritage|custom|history/.test(q)) topic="culture";
 
   const subject=targetRegion||targetCountry;
+  const focusTerm=/\bbihu\b/i.test(qraw) ? "Bihu" : "";
+  // Always replace the previous region. A country-only query (e.g. Nepal)
+  // must not inherit a stale region such as Assam from the previous query.
   currentCountry=targetCountry;
-  if(targetRegion) currentRegion=targetRegion;
+  currentRegion=targetRegion||null;
 
   box.innerHTML='<b>🤖 Cultural AI:</b> Understanding your request and finding a matching cultural story…';
 
-  // Real Gemini bridge. The API key stays server-side in Vercel; never put it in this HTML.
+  // Real AI bridge. The API key stays server-side in Vercel; never put it in this HTML.
+  // The prompt is deliberately topic-locked so AI answers the actual question.
+  const topicRules={
+    food:`Answer ONLY about traditional food/cuisine of ${subject}${targetCountry==="India"&&targetRegion?", India":""}. Name 3-5 relevant traditional foods and briefly explain them. Do NOT discuss geography, history, festivals, language, or unrelated culture unless directly needed to explain a food.`,
+    festival:focusTerm
+      ? `Answer ONLY about ${focusTerm} in ${subject}${targetCountry==="India"&&targetRegion?", India":""}. Explain what Bihu is, its main forms/celebrations, when it is observed in broad terms, and its cultural significance. Do NOT give a generic Assam overview or switch to unrelated food, geography, or language.`
+      : `Answer ONLY about festivals/celebrations of ${subject}${targetCountry==="India"&&targetRegion?", India":""}. Name 2-4 relevant festivals and briefly explain them. Do NOT give a generic country overview or switch to food/language/geography.`,
+    language:`Answer ONLY about languages spoken in ${subject}${targetCountry==="India"&&targetRegion?", India":""}. Give the main relevant languages and a brief explanation. Do NOT switch to food, festivals, geography, or generic culture.`,
+    dance:`Answer ONLY about traditional/folk dance of ${subject}${targetCountry==="India"&&targetRegion?", India":""}. Name relevant traditional dances or performance traditions and briefly explain them. Do NOT switch to food, festivals, language, geography, or generic culture.`,
+    bird:`Answer ONLY about birds associated with ${subject}${targetCountry==="India"&&targetRegion?", India":""}. Give relevant examples and brief facts. Do NOT give a generic country overview.`,
+    culture:`Answer ONLY the cultural/traditional question asked about ${subject}${targetCountry==="India"&&targetRegion?", India":""}. Stay directly on the requested tradition or heritage topic and do not drift into unrelated subjects.`
+  };
+  const aiQuestion=`User question: ${qraw}\n\nDetected location: ${subject}${targetCountry==="India"&&targetRegion?", India":""}.\nDetected topic: ${topic}.\n${focusTerm?`Detected focus: ${focusTerm}.\n`:""}\n${topicRules[topic]||topicRules.culture}\nKeep the answer concise (3-5 sentences), factual, and directly relevant to the detected topic.`;
   try{
     const r=await fetch("/api/ask-ai",{
       method:"POST",
       headers:{"Content-Type":"application/json"},
       body:JSON.stringify({
-        question:q,
+        question:aiQuestion,
         country:targetCountry,
         region:targetRegion,
         topic:topic,
@@ -842,42 +1206,70 @@ async function runAI(){
     });
     if(r.ok){
       const ai=await r.json();
-      const answer=ai.answer||ai.text||"";
+      let answer=ai.answer||ai.text||"";
       const aiCountry=ai.country||targetCountry;
       const aiRegion=ai.region||targetRegion;
-      const aiTopic=ai.topic||topic;
-      const videoQuery=ai.videoQuery||`${aiCountry} ${aiRegion||""} ${aiTopic} traditional culture`.trim();
+      const aiTopic=topic;
+      const videoQuery=ai.videoQuery||`${aiCountry} ${aiRegion||""} ${focusTerm||aiTopic} traditional cultural video`.trim();
+
+      // Guard against a response that ignored the detected topic.
+      const answerLower=String(answer).toLowerCase();
+      const topicSignals={
+        food:/food|cuisine|dish|recipe|cook|meal|rice|pitha|khar|tenga|curry|fish|sweet|snack|ingredient|flavour|flavor/,
+        festival:/festival|celebrat|bihu|puja|holiday|ceremony|fair|new year|ritual|dance/,
+        language:/language|spoken|dialect|assamese|bodo|bengali|tamil|hindi|english|script/,
+        dance:/dance|dancing|folk|performance|hornbill/,
+        bird:/bird|species|hornbill|eagle|kingfisher|owl|heron|stork/,
+        culture:/culture|tradition|heritage|custom|ritual|craft|weaving|dance|music|community/
+      };
+      if(!topicSignals[topic]?.test(answerLower)){
+        const local=(targetCountry==="India"&&targetRegion&&INDIA_STATES[targetRegion])
+          ? INDIA_STATES[targetRegion]
+          : (targetRegion?regionData(targetCountry,targetRegion):info(targetCountry));
+        if(topic==="food" && local?.food) answer=`Traditional food of ${subject} includes ${local.food}. These are part of the region's local cuisine and food traditions.`;
+        else if(topic==="festival" && local?.fest) answer=`Important festivals of ${subject} include ${local.fest}. These celebrations are part of the region's cultural traditions.`;
+        else if(topic==="language" && local?.lang) answer=`Languages associated with ${subject} include ${local.lang}. Language use can vary across communities and areas.`;
+        else if(topic==="dance" && local?.culture) answer=`Traditional dance in ${subject} is part of the region's cultural heritage, often connected with community celebrations, music and traditional performance.`;
+        else if(topic==="culture" && local?.culture) answer=local.culture;
+      }
+
+      // Keep the AI result state synchronized, including clearing an old region
+      // when the new answer is country-level.
       currentCountry=aiCountry;
-      if(aiRegion) currentRegion=aiRegion;
+      currentRegion=aiRegion||null;
       box.innerHTML=`<b>🤖 Cultural AI:</b> ${esc(answer||`Here is a ${aiTopic} story from ${aiCountry}.`)}
         <div class="badges">
           <span class="badge">📍 ${esc(aiRegion?aiRegion+", "+aiCountry:aiCountry)}</span>
-          <span class="badge">🔎 ${esc(aiTopic)}</span>
+          <span class="badge">🔎 ${esc(focusTerm||aiTopic)}</span>
           <span class="badge">🎬 AI video recommendation</span>
         </div>
         <div class="buttons">
           <button class="primary" data-action="ai-recommended-video" data-video-query="${esc(videoQuery)}">▶ Watch AI Recommended Video</button>
           <button class="secondary" data-action="country" data-country="${esc(aiCountry)}">Open ${esc(aiCountry)} ▶</button>
         </div>`;
+      loadRelatedAIVideos(qraw,aiCountry,aiRegion,aiTopic,videoQuery);
       return;
     }
-  }catch(_){ /* backend not deployed yet — continue with local demo mode */ }
+  }catch(_){ /* backend not available — continue with local topic-safe demo mode */ }
 
   // Demo-safe fallback: topic-specific search terms, so FOOD → food video,
   // FESTIVAL → festival video, etc. No unrelated generic video is substituted.
-  const videoQuery=`${subject} ${topic} cultural video`;
+  const videoQuery=`${subject} ${focusTerm||topic} cultural video`;
   let answer="";
-  try{
-    const wk=await wikipediaKnowledge(subject,topic);
-    if(wk) answer=wk.extract;
-  }catch(_){}
+  if(topic!=="food" && topic!=="festival" && topic!=="language") {
+    try{
+      const wk=await wikipediaKnowledge(subject,topic);
+      if(wk) answer=wk.extract;
+    }catch(_){}
+  }
   if(!answer){
     const d=(targetCountry==="India"&&targetRegion&&INDIA_STATES[targetRegion])
       ? INDIA_STATES[targetRegion]
       : (targetRegion?regionData(targetCountry,targetRegion):info(targetCountry));
     if(topic==="food") answer=d?.food||`${subject} has distinctive regional food traditions.`;
-    else if(topic==="festival") answer=d?.fest||`${subject} has a rich calendar of cultural festivals and celebrations.`;
+    else if(topic==="festival") answer=focusTerm ? `Bihu is a major festival tradition of Assam. The three main forms are Bohag (Rongali) Bihu, Kati (Kangali) Bihu and Magh (Bhogali) Bihu, associated with seasonal change, agriculture, community celebrations and Assamese cultural traditions.` : (d?.fest||`${subject} has a rich calendar of cultural festivals and celebrations.`);
     else if(topic==="language") answer=d?.lang||`${subject} has diverse language traditions.`;
+    else if(topic==="dance") answer=`Traditional dance in ${subject} is an important part of local cultural expression, connecting music, community celebrations and heritage.`;
     else answer=d?.culture||d?.story||`Explore the cultural traditions of ${subject}.`;
   }
 
@@ -891,6 +1283,7 @@ async function runAI(){
       <button class="primary" data-action="ai-recommended-video" data-video-query="${esc(videoQuery)}">▶ Find & Watch ${esc(topic)} Video</button>
       <button class="secondary" data-action="country" data-country="${esc(targetCountry)}">Open ${esc(targetCountry)} ▶</button>
     </div>`;
+  loadRelatedAIVideos(qraw,targetCountry,targetRegion,topic,videoQuery);
 }
 
 async function findAndPlayAIRecommendedVideo(query){
@@ -898,51 +1291,84 @@ async function findAndPlayAIRecommendedVideo(query){
   const results=document.getElementById("results");
   if(!modal||!results)return;
   modal.classList.add("open");
-  results.innerHTML=`<div class="detail"><h3>🤖🎬 AI Video Recommendation</h3><p>Searching open-license cultural videos for:</p><p><b>${esc(query)}</b></p></div>`;
+  const country=currentCountry||"India";
+  const region=currentRegion||"";
+  const q=String(query||"").toLowerCase();
+  const topic=/food|cuisine|dish|recipe|cook|meal/.test(q)?"food":/festival|bihu|celebrat|holiday|fair/.test(q)?"festival":/dance|folk/.test(q)?"dance":/language|dialect|spoken/.test(q)?"language":"culture";
+  const subject=region||country;
+  results.innerHTML=`<div class="detail"><h3>🤖🎬 Exact Cultural Video</h3><p>Searching only verified <b>${esc(subject)} • ${esc(topic)}</b> open-license videos.</p></div>`;
   try{
-    const api='https://commons.wikimedia.org/w/api.php?action=query&generator=search&gsrsearch='+encodeURIComponent(query)+'&gsrnamespace=6&gsrlimit=30&prop=imageinfo&iiprop=url|mime|extmetadata&format=json&origin=*';
+    const api='https://commons.wikimedia.org/w/api.php?action=query&generator=search&gsrsearch='+encodeURIComponent(`${subject} ${country} ${topic} traditional`)+'&gsrnamespace=6&gsrlimit=50&prop=imageinfo&iiprop=url|mime|extmetadata&format=json&origin=*';
     const r=await fetch(api); const j=await r.json();
     const allowed=/creative commons attribution|creative commons attribution-sharealike|cc by|cc by-sa|cc0|public domain|pd-old/i;
     const videos=Object.values(j?.query?.pages||{}).map(x=>{
       const ii=x?.imageinfo?.[0],m=ii?.extmetadata||{};
       const lic=(m.LicenseShortName?.value||m.License?.value||m.UsageTerms?.value||"");
-      return {url:ii?.url||"",mime:ii?.mime||"",title:x.title||"",license:lic.replace(/<[^>]+>/g,""),author:(m.Artist?.value||"Unknown author").replace(/<[^>]+>/g,"")};
-    }).filter(v=>v.url&&v.mime.startsWith("video/")&&allowed.test(v.license)).slice(0,5);
-
+      return {url:ii?.url||"",mime:ii?.mime||"",title:(x.title||"").replace(/^File:/,""),license:lic.replace(/<[^>]+>/g,""),author:(m.Artist?.value||"Unknown author").replace(/<[^>]+>/g,"") ,meta:m};
+    }).filter(v=>v.url&&v.mime.startsWith("video/")&&allowed.test(v.license)&&videoMatchesLocation(v.title,v.meta,subject,country)&&videoMatchesTopic(v.title,q,topic));
     if(!videos.length){
-      results.innerHTML=`<div class="detail"><h3>🎬 No matching open-license video found</h3><p>Try another country or topic.</p><button class="secondary" data-action="close-search">Close</button></div>`;
+      results.innerHTML=`<div class="detail"><h3>🎬 No verified matching video found</h3><p>No unrelated video will be substituted. Try another exact topic or region.</p><button class="secondary" data-action="close-search">Close</button></div>`;
       return;
     }
     const v=videos[0];
     const ext=(v.mime||"").toLowerCase().includes("mp4")||/\.mp4(\?|$)/i.test(v.url)?"mp4":"webm";
-    results.innerHTML=`<div class="detail"><h3>▶ AI Recommended Cultural Video</h3><p>${esc(v.title.replace(/^File:/,""))}</p><small>${esc(v.license)} • ${esc(v.author)}</small><div class="buttons"><button class="primary" data-action="ai-play-selected" data-video-url="${esc(v.url)}" data-mime="${ext}">▶ Play Video</button><button class="secondary" data-action="close-search">Close</button></div></div>`;
+    results.innerHTML=`<div class="detail"><h3>▶ Exact AI Recommended Cultural Video</h3><p>${esc(v.title)}</p><small>${esc(v.license)} • ${esc(v.author)}</small><div class="buttons"><button class="primary" data-action="ai-play-selected" data-video-url="${esc(v.url)}" data-mime="${ext}">▶ Play + Show Related Videos</button><button class="secondary" data-action="close-search">Close</button></div></div>`;
   }catch(e){
     results.innerHTML=`<div class="detail"><h3>⚠️ Video search unavailable</h3><p>Check the Internet connection.</p><button class="secondary" data-action="close-search">Close</button></div>`;
   }
 }
 
 function playAISelectedVideo(url,mime){
+  // Stay inside AI Journey. Never reuse a stale region from a previous query.
   closeSearch();
-  const country=currentCountry||"India";
-  show("country");
-  setTimeout(()=>{
-    const d=info(country);
-    const cc=document.getElementById("countryContent");
-    const v=document.createElement("video");
-    v.id="cultureVideo"; v.controls=true; v.playsInline=true; v.preload="metadata";
-    v.style.width="100%"; v.style.maxHeight="62vh"; v.style.borderRadius="18px";
-    const source=document.createElement("source"); source.src=url; source.type=mime==="mp4"?"video/mp4":"video/webm";
-    v.appendChild(source);
-    const old=cc.querySelector("#cultureVideo");
-    if(old) old.replaceWith(v);
-    else {
-      const wrap=cc.querySelector(".countryHead");
-      if(wrap) wrap.insertAdjacentElement("afterend",v);
-    }
-    v.muted=true;
-    v.play().catch(()=>toast("Press ▶ on the video to start playback."));
-    v.scrollIntoView({behavior:"smooth",block:"center"});
-  },250);
+  show("journey");
+
+  const input=document.getElementById("aiInput");
+  const question=(input?.value||"").trim();
+  const q=question.toLowerCase();
+
+  // Re-detect the location from the actual question so a query such as
+  // "NEPAL TRADITIONAL VIDEO" can never inherit Assam/Nagaland/etc.
+  let selectedCountry=currentCountry||"India";
+  const countryMatch=COUNTRIES.slice().sort((a,b)=>b.length-a.length)
+    .find(c=>q.includes(c.toLowerCase()));
+  if(countryMatch) selectedCountry=countryMatch;
+
+  let selectedRegion="";
+  const stateMatch=Object.keys(INDIA_STATES).slice().sort((a,b)=>b.length-a.length)
+    .find(st=>q.includes(st.toLowerCase()));
+  if(stateMatch){selectedCountry="India";selectedRegion=stateMatch;}
+  const regions=getRegions(selectedCountry)||[];
+  const foundRegion=regions.slice().sort((a,b)=>b.length-a.length)
+    .find(r=>q.includes(r.toLowerCase()));
+  if(foundRegion) selectedRegion=foundRegion;
+
+  let topic=/traditional food|food|cuisine|dish|eat|meal|cook|cooking|recipe/.test(q)?"food":
+    /festival|festivals|bihu|celebrat|holiday|new year|fair/.test(q)?"festival":
+    /dance|dancing|folk dance|folk/.test(q)?"dance":
+    /language|speak|spoken|dialect|official language/.test(q)?"language":
+    /bird/.test(q)?"bird":"culture";
+
+  currentCountry=selectedCountry;
+  currentRegion=selectedRegion||null;
+  const subject=selectedRegion||selectedCountry;
+
+  // Load the complete verified video set for the NEW query/location.
+  loadRelatedAIVideos(question,selectedCountry,selectedRegion,topic,question);
+
+  // Also open the selected recommendation in the large side player.
+  if(url){
+    setTimeout(()=>{
+      playRelatedAIVideo(url,
+        "AI Recommended Cultural Video — "+subject,
+        mime==="mp4"?"video/mp4":"video/webm");
+      const side=document.getElementById("aiRelatedVideos");
+      if(side) side.scrollIntoView({behavior:"smooth",block:"center"});
+    },450);
+  } else {
+    const side=document.getElementById("aiRelatedVideos");
+    if(side) side.scrollIntoView({behavior:"smooth",block:"center"});
+  }
 }
 
 function toast(m){const t=document.getElementById("toast");t.textContent=m;t.style.display="block";clearTimeout(window.__toast);window.__toast=setTimeout(()=>t.style.display="none",1800)}
@@ -972,7 +1398,76 @@ async function youtube(q){
 }
 function playVideo(){const v=document.getElementById("cultureVideo");if(v){v.play().catch(()=>{toast("Video could not start. Check Internet connection.")});v.scrollIntoView({behavior:"smooth",block:"center"})}}
 document.addEventListener("error",e=>{if(e.target&&e.target.tagName==="VIDEO")toast("Video failed to load. Check Internet connection.")},true);
+
+// If the TV/browser screen becomes hidden, stop playback. We intentionally
+// do not resume automatically when it becomes visible again.
+document.addEventListener("visibilitychange",()=>{
+  if(document.hidden) stopAllVideos();
+});
+window.addEventListener("pagehide",()=>stopAllVideos());
 function countryAI(){const d=info(currentCountry),el=document.getElementById("countryAI");el.innerHTML=`<h3>🤖 Cultural AI Insight</h3><p><b>${esc(currentCountry)}:</b> ${esc(d.story)} A good next step is to explore ${esc(d.festival)} and ${esc(d.food)}.</p><div class="badges"><span class="badge">✨ AI explanation</span><span class="badge">🎬 Video recommendation</span><span class="badge">⭐ Save journey</span></div>`}
+
+
+/* ===== HOME FEATURED COUNTRY VIDEO CAROUSEL ===== */
+const HOME_VIDEO_STORIES=[
+  {
+    country:"India",title:"Assam • Bihu",subtitle:"Festival • Dance • Music",
+    url:"https://upload.wikimedia.org/wikipedia/commons/e/e3/Bihu_world_record.webm",type:"video/webm",
+    credit:"Wikimedia Commons • Bihu world record"
+  },
+  {
+    country:"Japan",title:"Japan • Kintaikyo Culture Festival",subtitle:"Festival • Art • Heritage",
+    file:"Kintaikyo Art and Culture Festival, Japan, 2025 (996713).webm",type:"video/webm",
+    credit:"Wikimedia Commons • Kintaikyo Art and Culture Festival, Japan, 2025"
+  },
+  {
+    country:"Mexico",title:"Mexico • Indigenous Culture Festival",subtitle:"Festival • Tradition • Ritual",
+    file:"Fiesta de las Culturas Indígenas01.webm",type:"video/webm",
+    credit:"Wikimedia Commons • Fiesta de las Culturas Indígenas"
+  },
+  {
+    country:"Thailand",title:"Thailand • Traditional Folk Dance",subtitle:"Dance • Music • Tradition",
+    file:"Traditional Thailand Folk Dance ~ IICF 2016.webm",type:"video/webm",
+    credit:"Wikimedia Commons • Traditional Thailand Folk Dance"
+  },
+  {
+    country:"France",title:"France • Village Festival Heritage",subtitle:"Festival • Local Tradition • Heritage",
+    file:"Tir à l'oie (Beaux, Auvergne, France).webm",type:"video/webm",
+    credit:"Wikimedia Commons • Tir à l'oie, Beaux, France"
+  }
+];
+let homeVideoIndex=0;
+
+function commonsFileURL(fileName){
+  return "https://commons.wikimedia.org/wiki/Special:FilePath/"+encodeURIComponent(fileName);
+}
+function setHomeFeaturedVideo(index,autoPlay=true){
+  homeVideoIndex=(index+HOME_VIDEO_STORIES.length)%HOME_VIDEO_STORIES.length;
+  const item=HOME_VIDEO_STORIES[homeVideoIndex];
+  const v=document.getElementById("homeFeaturedVideo");
+  const title=document.getElementById("homeVideoTitle");
+  const sub=document.getElementById("homeVideoSubtitle");
+  if(title)title.textContent=`🌍 ${item.title}`;
+  if(sub)sub.textContent=`${item.subtitle} • ${item.country}`;
+  if(!v)return;
+
+  const url=item.url || (item.file ? commonsFileURL(item.file) : "");
+  v.pause();
+  v.muted=true;
+  v.innerHTML="";
+  if(url){
+    const source=document.createElement("source");
+    source.src=url;
+    source.type=item.type||"video/webm";
+    v.appendChild(source);
+    v.load();
+    if(autoPlay){
+      v.play().catch(()=>{});
+    }
+  }
+  const time=document.getElementById("homeVideoTime");
+  if(time)time.textContent="00:00";
+}
 
 document.addEventListener("click",e=>{
  const b=e.target.closest("button[data-action]");if(!b)return;e.preventDefault();const a=b.dataset.action;
@@ -987,11 +1482,42 @@ document.addEventListener("click",e=>{
  else if(a==="region-ai"){show("journey");document.getElementById("aiInput").value=`Tell me about ${currentRegion} in ${currentCountry}`;runAI()}
  else if(a==="region-video"){setRegionalVideo(currentRegion,currentCountry);setTimeout(()=>playVideo(),700)}
  else if(a==="topic-video")youtube(youtubeCultureQuery(currentRegion||currentCountry,currentCountry,b.dataset.topic));
+ else if(a==="video-play"){const v=document.getElementById("homeFeaturedVideo");if(v){v.muted=false;const x=e.target.closest("button");if(v.paused){v.play().catch(()=>{});if(x)x.textContent="⏸ Pause";}else{v.pause();if(x)x.textContent="▶ Play";}}}
+ else if(a==="video-sound"){const v=document.getElementById("homeFeaturedVideo");if(v){v.muted=!v.muted;const x=e.target.closest("button");if(x)x.textContent=v.muted?"🔇 Sound Off":"🔊 Sound On";if(!v.paused&&!v.muted)v.play().catch(()=>{});}}
+ else if(a==="video-fullscreen"){
+   const v=document.getElementById("homeFeaturedVideo");
+   if(v){
+     if(document.fullscreenElement){ document.exitFullscreen?.(); }
+     else if(v.requestFullscreen){
+       v.requestFullscreen({navigationUI:"hide"}).catch(()=>{try{v.webkitRequestFullscreen?.();}catch(_){}});
+     } else if(v.webkitRequestFullscreen){ v.webkitRequestFullscreen(); }
+   }
+ }
+ else if(a==="video-next"){setHomeFeaturedVideo(homeVideoIndex+1,true);}
+ else if(a==="video-prev"){setHomeFeaturedVideo(homeVideoIndex-1,true);}
+ else if(a==="ai-related-video"){playRelatedAIVideo(b.dataset.videoUrl,b.dataset.videoTitle,b.dataset.videoMime);}
+ else if(a==="ai-selected-play"){
+   const v=document.getElementById("aiSelectedVideo");
+   if(v){if(v.paused)v.play().catch(()=>{});else v.pause();}
+ }
+ else if(a==="ai-selected-sound"){
+   const v=document.getElementById("aiSelectedVideo");
+   if(v){v.muted=!v.muted;b.textContent=v.muted?"🔇 Sound Off":"🔊 Sound";if(!v.muted&&!v.paused)v.play().catch(()=>{});}
+ }
+ else if(a==="ai-selected-fullscreen"){
+   const v=document.getElementById("aiSelectedVideo");
+   if(v){
+     if(document.fullscreenElement){document.exitFullscreen?.();}
+     else if(v.requestFullscreen){v.requestFullscreen({navigationUI:"hide"}).catch(()=>{try{v.webkitRequestFullscreen?.();}catch(_){}});
+     } else if(v.webkitRequestFullscreen){v.webkitRequestFullscreen();}
+   }
+ }
+
  else if(a==="open-search")openSearch();
  else if(a==="close-search")closeSearch();
- else if(a==="clear-explore"){window.__focusAfterClear="country";document.getElementById("countryInput").value="";renderCountries();requestAnimationFrame(()=>{b.focus();b.classList.add("tv-focus");});}
+ else if(a==="clear-explore"){document.getElementById("countryInput").value="";renderCountries()}
  else if(a==="clear-region"){const x=document.getElementById("regionInput");if(x)x.value="";renderRegionResults(currentCountry)}
- else if(a==="clear-state"){const x=document.getElementById("stateInput");if(x)x.value="";renderIndiaStates();window.__focusAfterClear="state";b.focus();b.classList.add("tv-focus");}
+ else if(a==="clear-state"){const x=document.getElementById("stateInput");if(x)x.value="";renderIndiaStates();window.__focusAfterClear="state";}
  else if(a==="run-ai"){document.getElementById("aiSuggestions").style.display="none";runAI();}
  else if(a==="ai-recommended-video"){findAndPlayAIRecommendedVideo(b.dataset.videoQuery||"cultural video");}
  else if(a==="ai-play-selected"){playAISelectedVideo(b.dataset.videoUrl||"",b.dataset.mime||"webm");}
@@ -1005,6 +1531,30 @@ document.addEventListener("click",e=>{
  else if(a==="country-ai")countryAI();
  else if(a==="ai-culture-video"){const subject=currentRegion||currentCountry; if(subject){show("country"); if(currentCountry==="India" && currentRegion){setTimeout(()=>setRegionalVideo(currentRegion,"India"),50);} else {setTimeout(()=>setRegionalVideo(subject,currentCountry),50);} setTimeout(()=>playVideo(),800);}}
 });
+const homeFeaturedVideo=document.getElementById("homeFeaturedVideo");
+if(homeFeaturedVideo){
+  homeFeaturedVideo.addEventListener("play",()=>{
+    const b=document.querySelector('button[data-action="video-play"]');if(b)b.textContent="⏸ Pause";
+  });
+  homeFeaturedVideo.addEventListener("pause",()=>{
+    const b=document.querySelector('button[data-action="video-play"]');if(b)b.textContent="▶ Play";
+  });
+  homeFeaturedVideo.addEventListener("timeupdate",()=>{
+    const t=document.getElementById("homeVideoTime");
+    if(t){const s=Math.floor(homeFeaturedVideo.currentTime||0);t.textContent=String(Math.floor(s/60)).padStart(2,"0")+":"+String(s%60).padStart(2,"0");}
+  });
+  homeFeaturedVideo.addEventListener("ended",()=>setHomeFeaturedVideo(homeVideoIndex+1,true));
+  homeFeaturedVideo.addEventListener("error",()=>{
+    const sub=document.getElementById("homeVideoSubtitle");
+    if(sub)sub.textContent="Video could not load • Press Next for another cultural story";
+  });
+  const updateFullscreenButton=()=>{
+    const b=document.querySelector('button[data-action="video-fullscreen"]');
+    if(b)b.textContent=(document.fullscreenElement||document.webkitFullscreenElement)?"⛶ Exit Full Screen":"⛶ Full Screen";
+  };
+  document.addEventListener("fullscreenchange",updateFullscreenButton);
+  document.addEventListener("webkitfullscreenchange",updateFullscreenButton);
+}
 document.getElementById("countryInput").addEventListener("input",renderCountries);
 document.addEventListener("input",e=>{if(e.target&&e.target.id==="regionInput")renderRegionResults(currentCountry); if(e.target&&e.target.id==="stateInput")renderIndiaStates();});
 document.getElementById("mainInput").addEventListener("input",searchAll);
@@ -1015,6 +1565,20 @@ document.addEventListener("keydown",e=>{
  if(e.key==="/"&&document.activeElement.tagName!=="INPUT"){e.preventDefault();openSearch()}
 });
 renderFeatured();renderHomeCountries();renderCountries();renderFavorites();
+
+setHomeFeaturedVideo(0,false);
+const homeVideo=document.getElementById("homeFeaturedVideo");
+if(homeVideo){
+  homeVideo.addEventListener("timeupdate",()=>{
+    const t=homeVideo.currentTime||0;
+    const m=Math.floor(t/60).toString().padStart(2,"0");
+    const s=Math.floor(t%60).toString().padStart(2,"0");
+    const el=document.getElementById("homeVideoTime");
+    if(el)el.textContent=`${m}:${s}`;
+  });
+  homeVideo.addEventListener("ended",()=>setHomeFeaturedVideo(homeVideoIndex+1,true));
+}
+
 </script>
 
 <script>
@@ -1153,44 +1717,8 @@ renderFeatured();renderHomeCountries();renderCountries();renderFavorites();
   };
 
   document.addEventListener('keydown',function(e){
-    const rk=e.key;
-    const dk=({Down:'ArrowDown',DPAD_DOWN:'ArrowDown','dpad-down':'ArrowDown',Up:'ArrowUp',DPAD_UP:'ArrowUp','dpad-up':'ArrowUp',Left:'ArrowLeft',DPAD_LEFT:'ArrowLeft','dpad-left':'ArrowLeft',Right:'ArrowRight',DPAD_RIGHT:'ArrowRight','dpad-right':'ArrowRight'})[rk] || ({40:'ArrowDown',38:'ArrowUp',37:'ArrowLeft',39:'ArrowRight'}[e.keyCode]) || rk;
-    const a=document.activeElement;
-    const visual=document.querySelector('.tv-focus');
-    const clearFocused =
-      (a && a.dataset && a.dataset.action==='clear-explore') ||
-      (visual && visual.dataset && visual.dataset.action==='clear-explore') ||
-      window.__focusAfterClear==='country';
-
-    // HARD RULE: after Clear, DOWN must enter the country grid.
-    // Do this before any generic scrolling/spatial navigation.
-    if(dk==='ArrowDown' && clearFocused){
-      const first=document.querySelector('#countries button[data-action="country"]');
-      if(first){
-        e.preventDefault();
-        e.stopImmediatePropagation();
-        window.__focusAfterClear=null;
-        document.querySelectorAll('.tv-focus').forEach(x=>x.classList.remove('tv-focus'));
-        first.classList.add('tv-focus');
-        try{first.focus({preventScroll:true});}catch(_){first.focus();}
-        try{first.scrollIntoView({block:'nearest',inline:'nearest'});}catch(_){}
-        return;
-      }
-    }
-  }, true);
-
-  document.addEventListener('keydown',function(e){
-    // Normalize browser, VVD and physical-remote D-pad key variants.
-    const rawKey=e.key;
-    const key = ({
-      Down:'ArrowDown', DPAD_DOWN:'ArrowDown', 'dpad-down':'ArrowDown',
-      Up:'ArrowUp', DPAD_UP:'ArrowUp', 'dpad-up':'ArrowUp',
-      Left:'ArrowLeft', DPAD_LEFT:'ArrowLeft', 'dpad-left':'ArrowLeft',
-      Right:'ArrowRight', DPAD_RIGHT:'ArrowRight', 'dpad-right':'ArrowRight'
-    })[rawKey] || ({40:'ArrowDown',38:'ArrowUp',37:'ArrowLeft',39:'ArrowRight'}[e.keyCode]) || rawKey;
+    const key=e.key;
     let active=document.activeElement;
-    const visualFocus=document.querySelector('.tv-focus');
-    if(visualFocus && (!active || active===document.body || !visible(active))) active=visualFocus;
 
     // Physical/virtual Back variants that a browser/WebView may expose.
     if(key==='Escape'||key==='BrowserBack'||key==='GoBack'){
