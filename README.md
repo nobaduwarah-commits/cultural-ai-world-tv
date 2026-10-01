@@ -47,6 +47,12 @@ Watch the Cultural AI World TV demo:
 5. Select cultural videos and explore the content.
 6. Navigate the application using the TV remote / D-pad.
 
+## 🧪 Testing & Development
+
+The application was tested using an Android Emulator with the deployed Vercel web version.
+
+The project also includes Amazon Vega/Kepler configuration for the TV target.
+
 ## 💡 Inspiration
 
 The project was inspired by the idea of making cultural learning more engaging and accessible through television.
